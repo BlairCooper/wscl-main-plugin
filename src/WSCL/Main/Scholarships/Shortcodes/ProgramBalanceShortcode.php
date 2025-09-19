@@ -1,0 +1,21 @@
+<?php declare(strict_types = 1);
+namespace WSCL\Main\Scholarships\Shortcodes;
+
+use RCS\WP\PluginInfoInterface;
+use WSCL\Main\Scholarships\ScholarshipOptionsInterface;
+
+class ProgramBalanceShortcode extends ShortcodeBase
+{
+    public function __construct(
+        PluginInfoInterface $pluginInfo,
+        ScholarshipOptionsInterface $options
+        )
+    {
+        parent::__construct($pluginInfo, 'wscl_fa_program_balance', $options);
+    }
+
+    protected function privRenderShortcode(array $metas): string
+    {
+        return strval($this->getCost() - $this->getAward());
+    }
+}
