@@ -6,10 +6,9 @@ use Psr\Log\LoggerInterface;
 use RCS\PDF\PDFService;
 use RCS\PDF\PDFServiceException;
 use RCS\WP\PluginInfoInterface;
-use WSCL\Main\WsclMainOptions;
+use WSCL\Main\WsclMainOptionsInterface;
 use WSCL\Main\RaceResult\Entity\Event;
 use WSCL\Main\RaceResult\Entity\RiderTimingData;
-use WSCL\Main\WsclMainOptionsInterface;
 
 
 class RiderAnalyzer

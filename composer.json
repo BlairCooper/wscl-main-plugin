@@ -8,7 +8,6 @@
 		"php" : ">=8.2",
 		"composer/installers" : "~2.3",
 		"deliciousbrains/wp-background-processing" : "~1.4",
-		"soundasleep/html2text" : "~2.1",
 		"psr/log" : "~3.0",
 		"monolog/monolog" : "~3.9",
 		"guzzlehttp/guzzle" : "~7.9",

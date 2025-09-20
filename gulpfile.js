@@ -86,6 +86,7 @@ function runComposerTask() {
 let zipContents = [
     entryPointFile,
     'index.php',
+    'resources/**',
     'src/**',
     'vendor/**'
 ];

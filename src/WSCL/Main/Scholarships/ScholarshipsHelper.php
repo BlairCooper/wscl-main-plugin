@@ -6,7 +6,6 @@ use Psr\Log\LoggerInterface;
 use RCS\WP\Formidable\Formidable;
 use WSCL\Main\CcnBikes\CcnClient;
 use WSCL\Main\CcnBikes\Entity\Coupon;
-use WSCL\Main\WsclMainOptionsInterface;
 
 class ScholarshipsHelper
 {

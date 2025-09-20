@@ -2,6 +2,7 @@
 declare(strict_types = 1);
 namespace WSCL\Main\Staging;
 
+use Psr\Log\LoggerInterface;
 use WSCL\Main\RaceResult\RaceResultClient;
 use WSCL\Main\Staging\Entity\RaceResultImportRcd;
 use WSCL\Main\Staging\Entity\SeasonPointsWrapper;
@@ -9,8 +10,6 @@ use WSCL\Main\Staging\Entity\TimingRcd;
 use WSCL\Main\Staging\Models\Event;
 use WSCL\Main\Staging\Types\RegisteredRiderMap;
 use WSCL\Main\Staging\Types\TimingRiderMap;
-use WSCL\Main\WsclMainOptions;
-use Psr\Log\LoggerInterface;
 
 class TimingLoader
 {

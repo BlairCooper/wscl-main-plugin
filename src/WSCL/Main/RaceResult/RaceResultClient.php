@@ -4,13 +4,13 @@ namespace WSCL\Main\RaceResult;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\MessageFormatter;
-use GuzzleHttp\Middleware;
 use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\UriTemplate\UriTemplate;
 use Psr\Log\LoggerInterface;
+use Psr\SimpleCache\CacheInterface;
 use RCS\Json\JsonClientTrait;
+use WSCL\Main\WsclMainOptionsInterface;
 use WSCL\Main\RaceResult\Entity\Event;
 use WSCL\Main\RaceResult\Entity\EventSettings;
 use WSCL\Main\RaceResult\Entity\RiderTimingData;
@@ -18,8 +18,6 @@ use WSCL\Main\RaceResult\Entity\SeasonPoints;
 use WSCL\Main\RaceResult\Entity\TeamScoringData;
 use WSCL\Main\RaceResult\Filter\RaceResultAuthFilter;
 use WSCL\Main\RaceResult\Json\RaceResultFactoryRegistry;
-use Psr\SimpleCache\CacheInterface;
-use WSCL\Main\WsclMainOptionsInterface;
 
 class RaceResultClient
 {
@@ -54,9 +52,9 @@ class RaceResultClient
         $this->logger = $logger;
 
         $httpLogger = null;
-//             Middleware::log(
+//             \GuzzleHttp\Middleware::log(
 //                 $this->logger,
-//                 new MessageFormatter(MessageFormatter::DEBUG),
+//                 new \GuzzleHttp\MessageFormatter(MessageFormatter::DEBUG),
 //                 'debug'
 //                 );
 
