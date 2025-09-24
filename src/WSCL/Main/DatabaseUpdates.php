@@ -25,7 +25,7 @@ class DatabaseUpdates implements DatabaseUpdatesInterface
         remove_action('frm_after_create_entry', 'FrmProEntriesController::maybe_set_cookie', 20);
 
         return [
-            '2.0.1' => function () { $this->upgradeDatabaseTo_2_0_1(); },
+            '2.0.4' => function () { $this->upgradeDatabaseTo_2_0_4(); },
 //             '2.0.40' => function () { $this->upgradeDatabaseTo_2_0_40(); },
 //             '2.0.32' => function () { $this->upgradeDatabaseTo_2_0_32(); },
 //             '2.0.24' => function () { $this->upgradeDatabaseTo_2_0_24(); },
@@ -33,13 +33,13 @@ class DatabaseUpdates implements DatabaseUpdatesInterface
             ];
     }
 
-    private function upgradeDatabaseTo_2_0_1(): void
+    private function upgradeDatabaseTo_2_0_4(): void
     {
         // Create an alias to the new namespace from the old namespace
         class_alias('WSCL\Main\Staging\Models\NameMapEntry', 'WSCL\WordPress\Staging\Models\NameMapEntry');
 
         // To force WordPress to save the entries with the new namespace we
-        // need to make it so the contents of the map changes.
+        // need to make the contents of the map change.
         $map = NameMap::getInstance();
         $tmpEntry = NameMapEntry::getClassFactory()((object)[
             'type'    => 'tmp',
