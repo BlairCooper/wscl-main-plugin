@@ -48,11 +48,7 @@ class PetitionInfoTableShortcode extends ShortcodeBase
                     [self::WHITE, 'Coach Name', $this->getValue($entry, PetitionsHelper::FLD_PR_COACH_NAME)],
                     [self::GRAY, 'Coach Email', $this->getValue($entry, PetitionsHelper::FLD_PR_COACH_EMAIL)],
                     [self::WHITE, 'Current Category', $this->getValue($entry, PetitionsHelper::FLD_PR_CURRENT_CATEGORY)],
-                    [self::GRAY, 'Requested Category',
-                        $this->getValue($entry, PetitionsHelper::FLD_PR_REQUESTED_CATEGORY) .
-                        $this->getValue($entry, PetitionsHelper::FLD_PR_REQUESTED_HS_CATEGORY) .
-                        $this->getValue($entry, PetitionsHelper::FLD_PR_REQUESTED_MS_CATEGORY)
-                    ],
+                    [self::GRAY, 'Requested Category', $this->getValue($entry, PetitionsHelper::FLD_PR_REQUESTED_CATEGORY)],
                     [self::WHITE, 'Results', $this->getValue($entry, PetitionsHelper::FLD_PR_RACE_RESULTS)],
                     [self::GRAY, 'Reason/Circumstance', $this->getValue($entry, PetitionsHelper::FLD_PR_REASONING)],
                     [self::WHITE, 'Attachments', $this->getAttachmentUrls($entry)],

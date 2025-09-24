@@ -23,8 +23,6 @@ class PetitionsHelper
     const FLD_PR_COACH_EMAIL = 'pr_coach_email';
     const FLD_PR_CURRENT_CATEGORY = 'pr_curr_category';
     const FLD_PR_REQUESTED_CATEGORY = 'pr_req_category';
-    const FLD_PR_REQUESTED_HS_CATEGORY = 'pr_req_hs_category';
-    const FLD_PR_REQUESTED_MS_CATEGORY = 'pr_req_ms_category';
     const FLD_PR_RACE_RESULTS = 'pr_race_results';
     const FLD_PR_REASONING = 'pr_reasoning';
     const FLD_PR_UPLOADS = 'pr_uploads';
@@ -48,7 +46,7 @@ class PetitionsHelper
 
     private PluginInfoInterface $pluginInfo;
 
-    protected function __construct(PluginInfoInterface $pluginInfo)
+    public function __construct(PluginInfoInterface $pluginInfo)
     {
         $this->pluginInfo = $pluginInfo;
 

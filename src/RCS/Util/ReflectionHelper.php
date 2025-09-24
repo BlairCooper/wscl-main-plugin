@@ -152,7 +152,7 @@ class ReflectionHelper
             $reflectionClass = new \ReflectionClass($clazz);
 
             try {
-                $reflectionProperty = $reflectionClass->getProperty($property());
+                $reflectionProperty = $reflectionClass->getProperty($property);
                 $reflectionType = $reflectionProperty->getType();
 
                 $result = self::getNameForType($reflectionType);
