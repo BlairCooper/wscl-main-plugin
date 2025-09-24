@@ -4,6 +4,7 @@ namespace WSCL\Main;
 
 use DI\ContainerBuilder;
 use RCS\Logging\ErrorLogInterceptor;
+use RCS\WP\PluginInfo;
 use RCS\WP\Database\DatabaseUpdater;
 use WSCL\Main\MailerLite\Cron\MailerLiteCronJob;
 use WSCL\Main\Scholarships\Cron\ScholarshipsCronJob;
@@ -56,33 +57,11 @@ class WsclMainPlugin
             10,
             3
             );
-
-        add_action(
-            'upgrader_process_complete',
-            function (object $upgrader_object, array $options) use ($entryPointFile) {
-                if ($options['action'] == 'update' &&
-                    $options['type'] == 'plugin' &&
-                    isset( $options['plugins'] ) &&
-                    in_array( plugin_basename( $entryPointFile ), $options['plugins']))
-                {
-                    $path = self::getCompiledContainerPath();
-
-                    if (file_exists($path)) {
-                        array_map('unlink', glob("$path/*.php"));
-                    }
-                }
-            },
-            10,
-            2
-            );
     }
 
-    public static function getCompiledContainerPath(): string
+    private static function getCompiledContainerPath(string $entryPointFile): string
     {
-        $reflectionClass = new \ReflectionClass(self::class);
-        $shortName = $reflectionClass->getShortName();
-
-        return \wp_upload_dir()['basedir'] . DIRECTORY_SEPARATOR . 'CompiledContainers' . DIRECTORY_SEPARATOR . $shortName;
+        return (new PluginInfo($entryPointFile))->getPath();
     }
 
     private function initializeContainer(string $entryPointFile): void
@@ -95,7 +74,7 @@ class WsclMainPlugin
         $containerBuilder->addDefinitions(ServiceConfig::getDefinitions());
 
         if (!file_exists(get_home_path() . 'wp-config-local.php')) {
-            $containerBuilder->enableCompilation(self::getCompiledContainerPath());
+            $containerBuilder->enableCompilation(self::getCompiledContainerPath($entryPointFile));
         }
 
         $container = $containerBuilder->build();
