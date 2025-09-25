@@ -129,7 +129,7 @@ class PetitionsHelper
         if (is_user_logged_in()) {
             wp_enqueue_script(
                 $this->pluginInfo->getSlug(),
-                $this->pluginInfo->getUrl() . 'src/js/wscl-petition.js',
+                $this->pluginInfo->getUrl() . 'scripts/wscl-petition.js',
                 array('jquery'),
                 $this->pluginInfo->getVersion(),
                 false

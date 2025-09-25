@@ -31,8 +31,8 @@ abstract class WsclMapShortcodeBase extends ShortcodeBase
         $apiKey = $this->options->getGoogleMapsApiKey();
 
         return [
-            new ScriptMeta('GoogleMapsApi', "https://maps.googleapis.com/maps/api/js?key=$apiKey", [], 'defer'),
-            new ScriptMeta('wsclMaps', $this->pluginInfo->getUrl() . 'src/js/wscl-maps.js', ['jquery', 'GoogleMapsApi'], 'defer')
+            new ScriptMeta('GoogleMapsApi', "https://maps.googleapis.com/maps/api/js?key=$apiKey", [], 'async'),
+            new ScriptMeta('wsclMaps', $this->pluginInfo->getUrl() . 'scripts/wscl-maps.js', ['jquery', 'GoogleMapsApi'], 'defer')
             ];
     }
 

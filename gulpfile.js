@@ -87,6 +87,7 @@ let zipContents = [
     entryPointFile,
     'index.php',
     'resources/**',
+	'scripts/**',
     'src/**',
     'vendor/**'
 ];

@@ -8,6 +8,7 @@ use RCS\WP\PluginInfo;
 use RCS\WP\Database\DatabaseUpdater;
 use WSCL\Main\MailerLite\Cron\MailerLiteCronJob;
 use WSCL\Main\Scholarships\Cron\ScholarshipsCronJob;
+use WSCL\Main\Petitions\PetitionsHelper;
 
 class WsclMainPlugin
 {
@@ -95,6 +96,8 @@ class WsclMainPlugin
 
         $container->get(ServiceConfig::SHORTCODES);
         $container->get(ServiceConfig::STAGING_REST_CONTROLLERS);
+
+        $container->get(PetitionsHelper::class);
 
         if (is_admin()) {
             $container->get(WsclMainAdminSettings::class);
