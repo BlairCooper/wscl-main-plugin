@@ -73,46 +73,46 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
     #[CsvBindByName(column: 'Grade')]
     public int $grade;
 
-    #[CsvBindByName(column: 'Parent 1 First Name')]
+    #[CsvBindByName(column: 'Parent/Guardian 1 First Name')]
     public string $parent1FirstName;
 
-    #[CsvBindByName(column: 'Parent 1 Last Name')]
+    #[CsvBindByName(column: 'Parent/Guardian 1 Last Name')]
     public string $parent1LastName;
 
-    #[CsvBindByName(column: 'Parent 1 Email')]
+    #[CsvBindByName(column: 'Parent/Guardian 1 : Email')]
     public string $parent1Email;
 
-    #[CsvBindByName(column: 'Parent 1 Cell Phone')]
+    #[CsvBindByName(column: 'Parent/Guardian 1 : Cell Phone')]
     public string $parent1CellPhone;
 
-    #[CsvBindByName(column: 'Parent 1 Home Phone Number')]
+    #[CsvBindByName(column: 'Parent/Guardian 1 : Home Phone')]
     public string $parent1HomePhone;
 
-    #[CsvBindByName(column: 'Parent 2 First Name')]
+    #[CsvBindByName(column: 'Parent/Guardian 2 First Name')]
     public string $parent2FirstName;
 
-    #[CsvBindByName(column: 'Parent 2 Last Name')]
+    #[CsvBindByName(column: 'Parent/Guardian 2 Last Name')]
     public string $parent2LastName;
 
-    #[CsvBindByName(column: 'Parent 2 Email')]
+    #[CsvBindByName(column: 'Parent/Guardian 2 : Email')]
     public string $parent2Email;
 
-    #[CsvBindByName(column: 'Parent 2 Cell Phone')]
+    #[CsvBindByName(column: 'Parent/Guardian 2 : Cell Phone')]
     public string $parent2CellPhone;
 
-    #[CsvBindByName(column: 'Parent 2 Home Phone Number')]
+    #[CsvBindByName(column: 'Parent/Guardian 2 : Home Phone')]
     public string $parent2HomePhone;
 
-    #[CsvBindByName(column: 'Emergency Contact 1: First Name')]
+    #[CsvBindByName(column: 'Emergency Contact 1 : First Name')]
     public string $emergencyContact1FirstName;
 
     #[CsvBindByName(column: 'Emergency Contact 1: Last Name')]
     public string $emergencyContact1LastName;
 
-    #[CsvBindByName(column: 'Emergency Contact 1: Cell Phone Number')]
+    #[CsvBindByName(column: 'Emergency Contact 1: Cell Phone')]
     public string $emergencyContact1CellPhone;
 
-    #[CsvBindByName(column: 'Emergency Contact 1: Work Phone Number')]
+    #[CsvBindByName(column: 'Emergency Contact 1: Work Phone')]
     public string $emergencyContact1WorkPhone;
 
     #[CsvBindByName(column: 'Emergency Contact 2: First Name')]
@@ -121,37 +121,37 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
     #[CsvBindByName(column: 'Emergency Contact 2: Last Name')]
     public string $emergencyContact2LastName;
 
-    #[CsvBindByName(column: 'Emergency Contact 2: Cell Phone Number')]
+    #[CsvBindByName(column: 'Emergency Contact 2: Cell Phone')]
     public string $emergencyContact2CellPhone;
 
-    #[CsvBindByName(column: 'Emergency Contact 2: Work Phone Number')]
+    #[CsvBindByName(column: 'Emergency Contact 2: Work Phone')]
     public string $emergencyContact2WorkPhone;
 
-    #[CsvBindByName(column: 'Has medical conditions or allergies (Y/N)')]
+    #[CsvBindByName(column: 'Has Medical Conditions or Allergies?')]
     public bool $medicalConditionsYN;
 
-    #[CsvBindByName(column: 'Has and manages the following medical conditions or allergies')]
+    #[CsvBindByName(column: 'Medical Conditions or Allergies')]
     public string $medicalConditions;
 
-    #[CsvBindByName(column: 'Takes Prescription Medication  (Y/N)')]
+    #[CsvBindByName(column: 'Takes Prescription Medication?')]
     public bool $medicationsYN;
 
-    #[CsvBindByName(column: 'More Information (Medication)')]
+    #[CsvBindByName(column: 'Medication')]
     public string $medications;
 
-    #[CsvBindByName(column: 'Food Allergies (Y/N)')]
+    #[CsvBindByName(column: 'Has Food Allergies?')]
     public bool $foodAllergiesYN;
 
-    #[CsvBindByName(column: 'More Information (Food Allergies)')]
+    #[CsvBindByName(column: 'Food Allergies')]
     public string $foodAllergies;
 
-    #[CsvBindByName(column: 'Has asthma and will have an inhaler (Y/N)')]
+    #[CsvBindByName(column: 'Has Asthma and Will Have Inhaler?')]
     public bool $asthmaYN;
 
-    #[CsvBindByName(column: 'More Information (Asthma)')]
+    #[CsvBindByName(column: 'Inhaler')]
     public string $asthma;
 
-    #[CsvBindByName(column: 'Ibuprofen Authorized (Y/N)')]
+    #[CsvBindByName(column: 'Authorize WSCL / Team Staff to give ibuprofen')]
     public bool $ibuprofenYN;
 
     private bool $missingData = false;
