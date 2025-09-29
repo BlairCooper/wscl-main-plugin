@@ -188,7 +188,8 @@ class Category
                 )
         );
 
-        $cutoffKey  = array_keys($this->riders)[$cutoffRiderOffset];
+        // Small categories (e.g. 2) will not have enough riders to calculate a valid cutoffRiderOffset
+        $cutoffKey  = array_keys($this->riders)[$cutoffRiderOffset] ?? count($this->riders) - 1;
         $cutoffRider = $this->riders[$cutoffKey];
 
         $this->mandatoryDowngradeCutoff = $cutoffRider->averageLapSeconds;
