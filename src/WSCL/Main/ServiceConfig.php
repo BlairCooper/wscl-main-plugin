@@ -56,6 +56,7 @@ use WSCL\Main\Staging\Controllers\StagingController;
 use Psr\SimpleCache\CacheInterface;
 use RCS\Cache\DataCache;
 use WSCL\Main\RaceResult\RaceResultClient;
+use WSCL\Main\Scholarships\ScholarshipsHelper;
 
 class ServiceConfig
 {
@@ -81,6 +82,8 @@ class ServiceConfig
             MailerLiteOptionsInterface::class => \DI\get(WsclMainOptionsInterface::class),
             ScholarshipOptionsInterface::class => \DI\get(WsclMainOptionsInterface::class),
             CcnBikesOptionsInterface::class => \DI\get(WsclMainOptionsInterface::class),
+
+            ScholarshipsHelper::class => \DI\autowire(),
 
             BgProcessInterface::class => \DI\autowire(BgProcess::class)
                 ->constructor(params:

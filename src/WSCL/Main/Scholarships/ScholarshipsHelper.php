@@ -227,7 +227,7 @@ class ScholarshipsHelper
                     \FrmEntryMeta::update_entry_meta($entryId, Formidable::getFieldId(self::FLD_COACH_COUPON_USED), '', 0);
 
                     if (0 != $metaId) {
-                        $description = sprintf('%s Coach Scholarship %d', self::getSeasonPrefix(), $entry->id);
+                        $description = sprintf('%s Coach Scholarship %d', self::getSeasonPrefix(), $entryId);
                         $awardAmount = $entry->metas[Formidable::getFieldId(self::FLD_COACH_AWARD_AMOUNT)];
 
                         $this->createCcnCoupon(
@@ -315,7 +315,7 @@ class ScholarshipsHelper
                     $this->createStudentCoupon(
                         $metas[Formidable::getFieldId(self::FLD_STUDENT_COUPON_CODE)],
                         $awardAmount,
-                        $entry->id
+                        $entryId
                         );
                 }
             }
@@ -344,7 +344,7 @@ class ScholarshipsHelper
                         $couponCode = $this->getCouponCode();
 
                         $metaId = \FrmEntryMeta::add_entry_meta(
-                            $entry->id,
+                            $entryId,
                             Formidable::getFieldId(self::FLD_STUDENT_COUPON_CODE),
                             '',
                             $couponCode

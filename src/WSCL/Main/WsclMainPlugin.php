@@ -9,6 +9,7 @@ use RCS\WP\Database\DatabaseUpdater;
 use WSCL\Main\MailerLite\Cron\MailerLiteCronJob;
 use WSCL\Main\Scholarships\Cron\ScholarshipsCronJob;
 use WSCL\Main\Petitions\PetitionsHelper;
+use WSCL\Main\Scholarships\ScholarshipsHelper;
 
 class WsclMainPlugin
 {
@@ -93,6 +94,8 @@ class WsclMainPlugin
 
         $container->get(MailerLiteCronJob::class);
         $container->get(ScholarshipsCronJob::class);
+
+        $container->get(ScholarshipsHelper::class);
 
         $container->get(ServiceConfig::SHORTCODES);
         $container->get(ServiceConfig::STAGING_REST_CONTROLLERS);
