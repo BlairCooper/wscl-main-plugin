@@ -421,7 +421,7 @@ class ScholarshipsHelper
         // $score could be negative in situations where annual income disqualfies someone
         // The min() call ensures that no more than the fee is awarded
         // The max() call ensures someone with negative score receives a $0 award
-        return max(0, min(round((($dollarsPerPoint*$score)+$min) / 5) * 5, $fee));
+        return max(0, min(intval(round((($dollarsPerPoint*$score)+$min) / 5) * 5), $fee));
     }
 
     private function createCcnCoupon(string $code, string $description, int $awardAmount): bool
