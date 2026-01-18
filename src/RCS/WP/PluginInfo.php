@@ -21,7 +21,7 @@ class PluginInfo implements PluginInfoInterface
         $this->entryPointFile = $entryPointFile;
 
         if (!function_exists('get_plugin_data')) {
-            require_once ABSPATH . 'wp-admin/includes/plugin.php';  // @phpstan-ignore requireOnce.fileNotFound
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
         }
 
         /** @var array<string, string> */
@@ -43,7 +43,7 @@ class PluginInfo implements PluginInfoInterface
     public static function isPluginActive(string $pluginFile): bool
     {
         if (defined('ABSPATH')) { // Wrap in case we get invoked via unit testing
-            include_once ABSPATH . 'wp-admin/includes/plugin.php';  // @phpstan-ignore includeOnce.fileNotFound
+            include_once ABSPATH . 'wp-admin/includes/plugin.php';
         }
 
         return \is_plugin_active($pluginFile);

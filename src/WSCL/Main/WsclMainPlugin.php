@@ -69,7 +69,7 @@ class WsclMainPlugin
     private function initializeContainer(string $entryPointFile): void
     {
         if (!function_exists('get_home_path')) {
-            require_once ABSPATH . 'wp-admin/includes/file.php';    // @phpstan-ignore requireOnce.fileNotFound
+            require_once ABSPATH . 'wp-admin/includes/file.php';
         }
 
         $containerBuilder = new ContainerBuilder();
