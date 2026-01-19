@@ -88,7 +88,7 @@ class GroupIdMap implements \Iterator
 
     public function valid(): bool
     {
-        return self::END_OF_LIST != $this->getCurrentGroupName();
+        return !empty($this->groupIdMap) && self::END_OF_LIST != $this->getCurrentGroupName();
     }
 
     private function getCurrentGroupName(): string
