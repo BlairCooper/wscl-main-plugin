@@ -64,6 +64,10 @@ class RaceResultExportRcd
     #[CsvBindByName(column: 'RegSysID')]
     public int $regSysId;
 
+    #[CsvBindByName(column: 'PreRaceStagingScore')]
+    public float $preRaceStagingScore;
+
+
     public function fromRider(Rider $rider): RaceResultExportRcd
     {
         // Built-in fields
@@ -86,6 +90,7 @@ class RaceResultExportRcd
         $this->grade = $rider->getGrade();
         $this->nickname = $rider->getNickname();
         $this->regSysId = $rider->getRegSysId();
+        $this->preRaceStagingScore = $rider->getStagingScore();
 
         return $this;
     }

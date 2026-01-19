@@ -14,7 +14,16 @@ class TeamMapShortcode
         WsclMainOptionsInterface $options
         )
     {
-        parent::__construct($pluginInfo, $options, 'wscl_team_map');
+        parent::__construct($pluginInfo, $options);
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public static function getTagName(): string
+    {
+        return 'wscl_team_map';
     }
 
     protected function renderGoogleMarkersJavascript(): array

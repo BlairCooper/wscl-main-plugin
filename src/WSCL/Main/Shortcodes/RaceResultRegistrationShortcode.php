@@ -2,10 +2,10 @@
 declare(strict_types = 1);
 namespace WSCL\Main\Shortcodes;
 
-use RCS\WP\PluginInfoInterface;
-use RCS\WP\Shortcodes\ShortcodeBase;
+use RCS\WP\Shortcodes\ShortcodeImplInf;
+use RCS\WP\Shortcodes\ShortcodeImplTrait;
 
-class RaceResultRegistrationShortcode extends ShortcodeBase
+class RaceResultRegistrationShortcode implements ShortcodeImplInf
 {
     private const EVENT_ID = 'id';
     private const EVENT_NAME = 'name';
@@ -14,9 +14,16 @@ class RaceResultRegistrationShortcode extends ShortcodeBase
 
     private const DEFAULT_EVENT_SERVER = 'https://events2.raceresult.com';
 
-    public function __construct(PluginInfoInterface $pluginInfo)
+    use ShortcodeImplTrait;
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \RCS\WP\Shortcodes\ShortcodeImplInf::getTagName()
+     */
+    public static function getTagName(): string
     {
-        parent::__construct($pluginInfo, 'wscl-race-result-registration');
+        return 'wscl-race-result-registration';
     }
 
     /**
@@ -41,7 +48,7 @@ class RaceResultRegistrationShortcode extends ShortcodeBase
                 $errors[] = sprintf(
                 'No "%s" parameter specified for %s shortcode',
                 $field,
-                $this->getTagName()
+                static::getTagName()
                 );
             }
         }
@@ -61,7 +68,7 @@ class RaceResultRegistrationShortcode extends ShortcodeBase
             $result .= '<style>.RRReg div.RRReg_EntryField {padding: 20px 0 0 0; } .RRReg button {min-width: 100px; min-height: 30px;}</style>';
 
         } else {
-            array_unshift($errors, '<strong>Missing required attributes for the "'. $this->getTagName().'" shortcode</strong>');
+            array_unshift($errors, '<strong>Missing required attributes for the "'. static::getTagName().'" shortcode</strong>');
             array_push($errors, '');
 
             $result = join('<br>', $errors);

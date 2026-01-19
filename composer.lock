@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2c82293ff3c98563c8e895aec4ab1970",
+    "content-hash": "bff05c05392099afe089ed90918cff44",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -2336,6 +2336,59 @@
                 "source": "https://github.com/php-fig/simple-cache/tree/3.0.0"
             },
             "time": "2021-10-29T13:26:27+00:00"
+        },
+        {
+            "name": "raincity/rcs-wp-library",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/RainCitySolutions/rcs-wp-library",
+                "reference": "74ff1453958227b460a7e7229114bcac68f81d0d"
+            },
+            "require": {
+                "composer/installers": "~2.3",
+                "deliciousbrains/wp-background-processing": "~1.4",
+                "guzzlehttp/guzzle": "~7.10",
+                "json-mapper/json-mapper": "~2.25",
+                "monolog/monolog": "~3.10",
+                "php": ">=8.2",
+                "psr/log": "~3.0",
+                "psr/simple-cache": "~3.0",
+                "symfony/cache": "~7.4"
+            },
+            "require-dev": {
+                "brain/monkey": "~2.6",
+                "consolidation/robo": "~5.1",
+                "mikey179/vfsstream": "~1.6",
+                "phpstan/extension-installer": "~1.4",
+                "phpstan/phpstan": "~2.1",
+                "phpstan/phpstan-mockery": "~2.0",
+                "phpunit/phpunit": "~11.5",
+                "szepeviktor/phpstan-wordpress": "~2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ],
+                "psr-4": {
+                    "RCS\\": "src/RCS"
+                }
+            },
+            "autoload-dev": {
+                "files": [
+                    "test/helpers.php"
+                ],
+                "psr-4": {
+                    "RCS\\": "test/RCS",
+                    "Fixtures\\": "test/Fixtures"
+                }
+            },
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Library to support implementing WordPress plugins",
+            "time": "2026-01-19T03:29:29+00:00"
         },
         {
             "name": "ralouphie/getallheaders",

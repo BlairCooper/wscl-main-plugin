@@ -1,17 +1,20 @@
 <?php declare(strict_types = 1);
 namespace WSCL\Main\Scholarships\Shortcodes;
 
-use RCS\WP\PluginInfoInterface;
 use WSCL\Main\Scholarships\ScholarshipOptionsInterface;
 
 class ProgramBalanceShortcode extends ShortcodeBase
 {
     public function __construct(
-        PluginInfoInterface $pluginInfo,
         ScholarshipOptionsInterface $options
         )
     {
-        parent::__construct($pluginInfo, 'wscl_fa_program_balance', $options);
+        parent::__construct($options);
+    }
+
+    public static function getTagName(): string
+    {
+        return 'wscl_fa_program_balance';
     }
 
     protected function privRenderShortcode(array $metas): string

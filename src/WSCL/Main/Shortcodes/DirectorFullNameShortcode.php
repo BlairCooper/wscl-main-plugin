@@ -2,18 +2,28 @@
 declare(strict_types = 1);
 namespace WSCL\Main\Shortcodes;
 
-use RCS\WP\PluginInfoInterface;
-use RCS\WP\Shortcodes\ShortcodeBase;
+use RCS\WP\Shortcodes\ShortcodeImplInf;
+use RCS\WP\Shortcodes\ShortcodeImplTrait;
 use WSCL\Main\WsclMainOptionsInterface;
 
-class DirectorFullNameShortcode extends ShortcodeBase
+class DirectorFullNameShortcode implements ShortcodeImplInf
 {
+    use ShortcodeImplTrait;
+
     public function __construct(
-        PluginInfoInterface $pluginInfo,
         private WsclMainOptionsInterface $options
         )
     {
-        parent::__construct($pluginInfo, 'wscl-ed-fullname');
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \RCS\WP\Shortcodes\ShortcodeImplInf::getTagName()
+     */
+    public static function getTagName(): string
+    {
+        return 'wscl-ed-fullname';
     }
 
     /**

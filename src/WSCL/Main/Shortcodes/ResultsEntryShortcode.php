@@ -2,14 +2,21 @@
 declare(strict_types = 1);
 namespace WSCL\Main\Shortcodes;
 
-use RCS\WP\PluginInfoInterface;
-use RCS\WP\Shortcodes\ShortcodeBase;
+use RCS\WP\Shortcodes\ShortcodeImplInf;
+use RCS\WP\Shortcodes\ShortcodeImplTrait;
 
-class ResultsEntryShortcode extends ShortcodeBase
+class ResultsEntryShortcode implements ShortcodeImplInf
 {
-    public function __construct(PluginInfoInterface $pluginInfo)
+    use ShortcodeImplTrait;
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \RCS\WP\Shortcodes\ShortcodeImplInf::getTagName()
+     */
+    public static function getTagName(): string
     {
-        parent::__construct($pluginInfo, 'wscl-results-entry');
+        return 'wscl-results-entry';
     }
 
     /**
@@ -29,7 +36,7 @@ class ResultsEntryShortcode extends ShortcodeBase
             'date' => 'January 1, 1970'
             ),
             $attrs,
-            $this->getTagName()
+            static::getTagName()
             );
 
         ob_start();

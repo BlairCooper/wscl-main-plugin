@@ -1,22 +1,22 @@
 <?php declare(strict_types = 1);
 namespace WSCL\Main\Scholarships\Shortcodes;
 
-use RCS\WP\PluginInfoInterface;
 use RCS\WP\Formidable\Formidable;
+use RCS\WP\Shortcodes\ShortcodeImplInf;
+use RCS\WP\Shortcodes\ShortcodeImplTrait;
 use WSCL\Main\Scholarships\ScholarshipOptionsInterface;
 use WSCL\Main\Scholarships\ScholarshipsHelper;
 
-abstract class ShortcodeBase extends \RCS\WP\Shortcodes\ShortcodeBase
+abstract class ShortcodeBase implements ShortcodeImplInf
 {
     private ?\stdClass $frmEntry;
 
+    use ShortcodeImplTrait;
+
     protected function __construct(
-        PluginInfoInterface $pluginInfo,
-        string $tagName,
         protected ScholarshipOptionsInterface $options
         )
     {
-        parent::__construct($pluginInfo, $tagName);
     }
 
     /**

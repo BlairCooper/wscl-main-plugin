@@ -3,22 +3,23 @@ declare(strict_types=1);
 namespace WSCL\Main\Maps;
 
 use RCS\WP\Shortcodes\ScriptMeta;
-use RCS\WP\Shortcodes\ShortcodeBase;
+use RCS\WP\Shortcodes\ShortcodeImplInf;
+use RCS\WP\Shortcodes\ShortcodeImplTrait;
 use RCS\WP\PluginInfoInterface;
 use WSCL\Main\WsclMainOptionsInterface;
 
-abstract class WsclMapShortcodeBase extends ShortcodeBase
+abstract class WsclMapShortcodeBase implements ShortcodeImplInf
 {
+    use ShortcodeImplTrait;
+
     const COORDINATE_REGEX = '/^ *(-?1?[0-7]?[0-9]\.[0-9]{6,}) *, *(-?1?[0-7]?[0-9]\.[0-9]{6,}) *$/';
     const HTML_BREAK = '<br/>';
 
-    private WsclMainOptionsInterface $options;
-
-    protected function __construct(PluginInfoInterface $pluginInfo, WsclMainOptionsInterface $options, string $shortcodeTag)
+    protected function __construct(
+        protected PluginInfoInterface $pluginInfo,
+        private WsclMainOptionsInterface $options
+        )
     {
-        parent::__construct($pluginInfo, $shortcodeTag);
-
-        $this->options = $options;
     }
 
     /**
@@ -49,7 +50,7 @@ abstract class WsclMapShortcodeBase extends ShortcodeBase
             'background-color' => 'grey'
             ),
             $attrs,
-            $this->getTagName()
+            static::getTagName()
         );
 
         $divId = uniqid('wsclMaps');

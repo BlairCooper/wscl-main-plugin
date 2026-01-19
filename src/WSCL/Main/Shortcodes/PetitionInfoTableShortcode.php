@@ -2,20 +2,27 @@
 declare(strict_types = 1);
 namespace WSCL\Main\Shortcodes;
 
-use RCS\WP\PluginInfoInterface;
 use RCS\WP\Formidable\Formidable;
-use RCS\WP\Shortcodes\ShortcodeBase;
+use RCS\WP\Shortcodes\ShortcodeImplInf;
+use RCS\WP\Shortcodes\ShortcodeImplTrait;
 use WSCL\Main\Petitions\PetitionsHelper;
 
-class PetitionInfoTableShortcode extends ShortcodeBase
+class PetitionInfoTableShortcode implements ShortcodeImplInf
 {
     const WHITE = 'white';
     const GRAY = '#f3f3f3';
     const BACKGROUND = '#EEEEEE';
 
-    public function __construct(PluginInfoInterface $pluginInfo)
+    use ShortcodeImplTrait;
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \RCS\WP\Shortcodes\ShortcodeImplInf::getTagName()
+     */
+    public static function getTagName(): string
     {
-        parent::__construct($pluginInfo, 'wscl-petition-info-table');
+        return 'wscl-petition-info-table';
     }
 
     /**
@@ -30,7 +37,7 @@ class PetitionInfoTableShortcode extends ShortcodeBase
                 'id' => null
             ],
             $attrs,
-            $this->getTagName()
+            static::getTagName()
             );
 
         ob_start();

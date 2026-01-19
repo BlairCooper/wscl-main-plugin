@@ -1,18 +1,21 @@
 <?php declare(strict_types = 1);
 namespace WSCL\Main\Scholarships\Shortcodes;
 
-use RCS\WP\PluginInfoInterface;
 use WSCL\Main\Scholarships\ScholarshipOptionsInterface;
 use WSCL\Main\Scholarships\ScholarshipsHelper;
 
 class ProgramNameShortcode extends ShortcodeBase
 {
     public function __construct(
-        PluginInfoInterface $pluginInfo,
         ScholarshipOptionsInterface $options
         )
     {
-        parent::__construct($pluginInfo, 'wscl_fa_program_name', $options);
+        parent::__construct($options);
+    }
+
+    public static function getTagName(): string
+    {
+        return 'wscl_fa_program_name';
     }
 
     protected function privRenderShortcode(array $metas): string

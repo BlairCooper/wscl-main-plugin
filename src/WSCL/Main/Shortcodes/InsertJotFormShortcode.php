@@ -2,14 +2,21 @@
 declare(strict_types = 1);
 namespace WSCL\Main\Shortcodes;
 
-use RCS\WP\PluginInfoInterface;
-use RCS\WP\Shortcodes\ShortcodeBase;
+use RCS\WP\Shortcodes\ShortcodeImplInf;
+use RCS\WP\Shortcodes\ShortcodeImplTrait;
 
-class InsertJotFormShortcode extends ShortcodeBase
+class InsertJotFormShortcode implements ShortcodeImplInf
 {
-    public function __construct(PluginInfoInterface $pluginInfo)
+    use ShortcodeImplTrait;
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \RCS\WP\Shortcodes\ShortcodeImplInf::getTagName()
+     */
+    public static function getTagName(): string
     {
-        parent::__construct($pluginInfo, 'wscl-jotform');
+        return 'wscl-jotform';
     }
 
     /**

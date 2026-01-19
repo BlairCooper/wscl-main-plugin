@@ -4,13 +4,13 @@ namespace WSCL\Main\CcnBikes\BgTasks;
 
 use Psr\Log\LoggerInterface;
 use RCS\WP\BgProcess\BgProcessInterface;
+use RCS\WP\BgProcess\BgTaskInterface;
+use WSCL\Main\CcnBikes\CcnClient;
 use WSCL\Main\CcnBikes\Entity\IdentityAttributeTuple;
 use WSCL\Main\CcnBikes\Entity\IdentityAttributesResp;
 use WSCL\Main\CcnBikes\Enums\IdentityAttributeType;
 use WSCL\Main\Staging\RiderAttributeUpdate;
 use WSCL\Main\Staging\Entity\CcnRiderImportRcd;
-use RCS\WP\BgProcess\BgTaskInterface;
-use WSCL\Main\CcnBikes\CcnClient;
 
 
 class UpdateIdentityAttributesTask implements RiderAttributeUpdate, BgTaskInterface

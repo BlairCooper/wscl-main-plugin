@@ -14,7 +14,16 @@ class VenueMapShortcode
         WsclMainOptionsInterface $options
         )
     {
-        parent::__construct($pluginInfo, $options, 'wscl_venue_map');
+        parent::__construct($pluginInfo, $options);
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public static function getTagName(): string
+    {
+        return 'wscl_venue_map';
     }
 
     protected function renderGoogleMarkersJavascript(): array

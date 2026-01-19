@@ -2,18 +2,25 @@
 declare(strict_types = 1);
 namespace WSCL\Main\Shortcodes;
 
-use RCS\WP\PluginInfoInterface;
 use RCS\WP\Formidable\Formidable;
-use RCS\WP\Shortcodes\ShortcodeBase;
+use RCS\WP\Shortcodes\ShortcodeImplInf;
+use RCS\WP\Shortcodes\ShortcodeImplTrait;
 use WSCL\Main\Petitions\PetitionsHelper;
 
-class PetitionApprovalShortcode extends ShortcodeBase
+class PetitionApprovalShortcode implements ShortcodeImplInf
 {
     public const PARAM_ID = 'id';
 
-    public function __construct(PluginInfoInterface $pluginInfo)
+    use ShortcodeImplTrait;
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \RCS\WP\Shortcodes\ShortcodeImplInf::getTagName()
+     */
+    public static function getTagName(): string
     {
-        parent::__construct($pluginInfo, 'wscl-petition-buttons');
+        return 'wscl-petition-buttons';
     }
 
     /**
@@ -29,7 +36,7 @@ class PetitionApprovalShortcode extends ShortcodeBase
                 self::PARAM_ID => null
             ],
             $attrs,
-            $this->getTagName()
+            static::getTagName()
             );
 
         if (isset($attrs[self::PARAM_ID])) {

@@ -325,6 +325,7 @@ class StagingApp
             foreach ($event->getRaceCategories($race->getId()) as $category) {
                 /** @var Rider[] */
                 $riderSet = $categoryMap->getRidersByCategory($category->getName());
+
                 if (!empty($riderSet)) {
                     $ridersInRow = 0;
                     $doubleUp = false;
@@ -332,8 +333,10 @@ class StagingApp
                     foreach ($riderSet as $rider) {
                         $this->initializeRiderRow($rider, $event, $ridersInRow, $curRow, $doubleUp);
                     }
+
                     $category->initializeWaves($riderSet, $event->getRidersPerRow(), $event->getAttendanceFactor());
                     $raceCnt += count($riderSet);
+
                     if (0 != $ridersInRow) {    // did we end up with somebody in the last row?
                         $curRow++;    // move to next row for next category
                     }
@@ -480,12 +483,17 @@ class StagingApp
             );
         $writer->writeElement(
             'Instruction',
-            '2. After everyone is in their row, fill vacant spots with riders from the next row.'
+            '2. After everyone is in their row, fill vacant spots with riders from the row behind.'
             );
         $writer->writeElement(
             'Instruction',
             '3. IF A RIDER IS NOT PRESENT IN THEIR ASSIGNED ROW AT THE TIME OF STAGING, ' .
-            'THEY SHOULD BE POSITIONED AT THE BACK OF THEIR FIELD.'
+            'THEY SHOULD BE POSITIONED AT THE BACK OF THEIR WAVE/FIELD.'
+            );
+        $writer->writeElement(
+            'Instruction',
+            '4. After staging the riders, remain at the front of the group. Move forward ' .
+            'with the group as each wave/category starts until you reach the start line.'
             );
 
         $writer->endElement();      // Instructions
