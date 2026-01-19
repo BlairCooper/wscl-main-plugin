@@ -86,7 +86,7 @@ class CcnClient
             'handler' => $downloadStack,
             RequestOptions::VERIFY => true,
             RequestOptions::HTTP_ERRORS => false,
-            RequestOptions::DECODE_CONTENT => 'gzip, deflate, br',
+            RequestOptions::DECODE_CONTENT => 'gzip, deflate',
             RequestOptions::HEADERS => array(
                 'User-Agent' => sprintf('"%s"', join(' ', self::USER_AGENT_PARTS)),
                 )
@@ -115,7 +115,7 @@ class CcnClient
             RequestOptions::VERIFY => true,
             RequestOptions::HTTP_ERRORS => false,
             RequestOptions::COOKIES => $cookieJar,
-            RequestOptions::DECODE_CONTENT => 'gzip, deflate, br',
+            RequestOptions::DECODE_CONTENT => 'gzip, deflate',
             RequestOptions::HEADERS => array(
                 'User-Agent' => sprintf('"%s"', join(' ', self::USER_AGENT_PARTS)),
                 'Accept' => 'application/json',
