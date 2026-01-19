@@ -56,13 +56,13 @@ use WSCL\Main\Staging\Controllers\StagingController;
 use Psr\SimpleCache\CacheInterface;
 use RCS\Cache\DataCache;
 use WSCL\Main\RaceResult\RaceResultClient;
+use RCS\WP\ShortcodeProxy;
 use WSCL\Main\Scholarships\ScholarshipsHelper;
 
 class ServiceConfig
 {
     public const PLUGIN_ENTRYPOINT = 'plugin.entryPoint';
     public const SETTINGS_TABS = 'settings.tabs';
-    public const SHORTCODES = 'shortcode.objs';
     public const STAGING_REST_CONTROLLERS = 'staging.rest.controllers';
 
     /**
@@ -99,35 +99,38 @@ class ServiceConfig
                 \DI\autowire(ScholarshipOptionsTab::class)
             ],
 
-            self::SHORTCODES => [
-                \DI\autowire(DirectorEmailAliasShortcode::class),
-                \DI\autowire(DirectorFirstNameShortcode::class),
-                \DI\autowire(DirectorFullNameShortcode::class),
-                \DI\autowire(InsertJotFormShortcode::class),
-                \DI\autowire(PetitionApprovalShortcode::class),
-                \DI\autowire(PetitionInfoTableShortcode::class),
-                \DI\autowire(PostExcerptShortcode::class),
-                \DI\autowire(PostTitleShortcode::class),
-                \DI\autowire(RaceParticipantsCategoriesShortcode::class),
-                \DI\autowire(RaceResultRegistrationShortcode::class),
-                \DI\autowire(ResultsDetailsRaceDateShortcode::class),
-                \DI\autowire(ResultsDetailsRaceNameShortcode::class),
-                \DI\autowire(ResultsDetailsRaceNumberShortcode::class),
-                \DI\autowire(ResultsDetailsRaceResultsShortcode::class),
-                \DI\autowire(ResultsDetailsRaceTitleShortcode::class),
-                \DI\autowire(ResultsEntryShortcode::class),
-                \DI\autowire(ResultsLinkButtonShortcode::class),
-                \DI\autowire(ResultsPhotoLinkShortcode::class),
-                \DI\autowire(ResultsRaceShortcode::class),
-                \DI\autowire(ResultsTableShortcode::class),
+            /**
+             * Shortcodes
+             */
+            ShortcodeProxy::class => \DI\autowire(),
 
-                \DI\autowire(TeamMapShortcode::class),
-                \DI\autowire(VenueMapShortcode::class),
+            DirectorEmailAliasShortcode::class => \DI\autowire(),
+            DirectorFirstNameShortcode::class => \DI\autowire(),
+            DirectorFullNameShortcode::class => \DI\autowire(),
+            InsertJotFormShortcode::class => \DI\autowire(),
+            PetitionApprovalShortcode::class => \DI\autowire(),
+            PetitionInfoTableShortcode::class => \DI\autowire(),
+            PostExcerptShortcode::class => \DI\autowire(),
+            PostTitleShortcode::class => \DI\autowire(),
+            RaceParticipantsCategoriesShortcode::class => \DI\autowire(),
+            RaceResultRegistrationShortcode::class => \DI\autowire(),
+            ResultsDetailsRaceDateShortcode::class => \DI\autowire(),
+            ResultsDetailsRaceNameShortcode::class => \DI\autowire(),
+            ResultsDetailsRaceNumberShortcode::class => \DI\autowire(),
+            ResultsDetailsRaceResultsShortcode::class => \DI\autowire(),
+            ResultsDetailsRaceTitleShortcode::class => \DI\autowire(),
+            ResultsEntryShortcode::class => \DI\autowire(),
+            ResultsLinkButtonShortcode::class => \DI\autowire(),
+            ResultsPhotoLinkShortcode::class => \DI\autowire(),
+            ResultsRaceShortcode::class => \DI\autowire(),
+            ResultsTableShortcode::class => \DI\autowire(),
 
-                \DI\autowire(ProgramBalanceShortcode::class),
-                \DI\autowire(ProgramFeeShortcode::class),
-                \DI\autowire(ProgramNameShortcode::class),
-            ],
+            TeamMapShortcode::class => \DI\autowire(),
+            VenueMapShortcode::class => \DI\autowire(),
+
+            ProgramBalanceShortcode::class => \DI\autowire(),
+            ProgramFeeShortcode::class => \DI\autowire(),
+            ProgramNameShortcode::class => \DI\autowire(),
 
             self::STAGING_REST_CONTROLLERS => [
                 \DI\autowire(EventController::class)
@@ -165,7 +168,6 @@ class ServiceConfig
             CcnClient::class => \DI\autowire(),
             MailerLiteClient::class => \DI\autowire(),
             RaceResultClient::class => \DI\autowire(),
-
 
             MailerLiteCronJob::class => \DI\autowire(MailerLiteCronJob::class),
             ScholarshipsCronJob::class => \DI\autowire(ScholarshipsCronJob::class),

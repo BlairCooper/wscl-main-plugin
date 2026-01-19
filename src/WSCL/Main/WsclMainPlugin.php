@@ -8,7 +8,33 @@ use RCS\WP\PluginInfo;
 use RCS\WP\Database\DatabaseUpdater;
 use WSCL\Main\MailerLite\Cron\MailerLiteCronJob;
 use WSCL\Main\Scholarships\Cron\ScholarshipsCronJob;
+use WSCL\Main\Scholarships\Shortcodes\ProgramBalanceShortcode;
+use WSCL\Main\Scholarships\Shortcodes\ProgramFeeShortcode;
+use WSCL\Main\Scholarships\Shortcodes\ProgramNameShortcode;
+use WSCL\Main\Shortcodes\DirectorEmailAliasShortcode;
+use WSCL\Main\Shortcodes\DirectorFirstNameShortcode;
+use WSCL\Main\Shortcodes\DirectorFullNameShortcode;
+use WSCL\Main\Shortcodes\InsertJotFormShortcode;
+use WSCL\Main\Shortcodes\PetitionApprovalShortcode;
+use WSCL\Main\Shortcodes\PetitionInfoTableShortcode;
+use WSCL\Main\Shortcodes\PostExcerptShortcode;
+use WSCL\Main\Shortcodes\PostTitleShortcode;
+use WSCL\Main\Shortcodes\RaceParticipantsCategoriesShortcode;
+use WSCL\Main\Shortcodes\RaceResultRegistrationShortcode;
+use WSCL\Main\Shortcodes\ResultsDetailsRaceDateShortcode;
+use WSCL\Main\Shortcodes\ResultsDetailsRaceNameShortcode;
+use WSCL\Main\Shortcodes\ResultsDetailsRaceNumberShortcode;
+use WSCL\Main\Shortcodes\ResultsDetailsRaceResultsShortcode;
+use WSCL\Main\Shortcodes\ResultsDetailsRaceTitleShortcode;
+use WSCL\Main\Shortcodes\ResultsEntryShortcode;
+use WSCL\Main\Shortcodes\ResultsLinkButtonShortcode;
+use WSCL\Main\Shortcodes\ResultsPhotoLinkShortcode;
+use WSCL\Main\Shortcodes\ResultsRaceShortcode;
+use WSCL\Main\Shortcodes\ResultsTableShortcode;
 use WSCL\Main\Petitions\PetitionsHelper;
+use RCS\WP\ShortcodeProxy;
+use WSCL\Main\Maps\TeamMapShortcode;
+use WSCL\Main\Maps\VenueMapShortcode;
 use WSCL\Main\Scholarships\ScholarshipsHelper;
 
 class WsclMainPlugin
@@ -83,21 +109,20 @@ class WsclMainPlugin
 
         $container->set(ServiceConfig::PLUGIN_ENTRYPOINT, $entryPointFile);
 
-        ErrorLogInterceptor::init([
+        new ErrorLogInterceptor([                               // NOSONAR - not useless instantiation
             E_USER_NOTICE => ['_load_textdomain_just_in_time']
-        ]
-            );
+            ]
+        );
 
         /** @var DatabaseUpdater */
         $dbUpdater = $container->get(DatabaseUpdater::class);
         $dbUpdater->privUpgradeDatabase();
 
+        $container->get(ScholarshipsHelper::class);
+
         $container->get(MailerLiteCronJob::class);
         $container->get(ScholarshipsCronJob::class);
 
-        $container->get(ScholarshipsHelper::class);
-
-        $container->get(ServiceConfig::SHORTCODES);
         $container->get(ServiceConfig::STAGING_REST_CONTROLLERS);
 
         $container->get(PetitionsHelper::class);
@@ -107,5 +132,38 @@ class WsclMainPlugin
         }
 
         $this->options = $container->get(WsclMainOptionsInterface::class);
+
+        /** @var ShortcodeProxy $scProxy */
+        $scProxy = $container->get(ShortcodeProxy::class);
+        $scProxy->addShortcodes([
+            DirectorEmailAliasShortcode::class,
+            DirectorFirstNameShortcode::class,
+            DirectorFullNameShortcode::class,
+            InsertJotFormShortcode::class,
+            PetitionApprovalShortcode::class,
+            PetitionInfoTableShortcode::class,
+            PostExcerptShortcode::class,
+            PostTitleShortcode::class,
+            RaceParticipantsCategoriesShortcode::class,
+            RaceResultRegistrationShortcode::class,
+            ResultsDetailsRaceDateShortcode::class,
+            ResultsDetailsRaceNameShortcode::class,
+            ResultsDetailsRaceNumberShortcode::class,
+            ResultsDetailsRaceResultsShortcode::class,
+            ResultsDetailsRaceTitleShortcode::class,
+            ResultsEntryShortcode::class,
+            ResultsLinkButtonShortcode::class,
+            ResultsPhotoLinkShortcode::class,
+            ResultsRaceShortcode::class,
+            ResultsTableShortcode::class,
+
+            TeamMapShortcode::class,
+            VenueMapShortcode::class,
+
+            ProgramBalanceShortcode::class,
+            ProgramFeeShortcode::class,
+            ProgramNameShortcode::class
+            ]
+        );
     }
 }
