@@ -4,7 +4,7 @@ namespace WSCL\Main\CcnBikes\Filter;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Utils;
-use GuzzleHttp\Cookie\CookieJar;
+use GuzzleHttp\Cookie\CookieJarInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
 
@@ -19,7 +19,7 @@ class CcnAuthenticateFilter
 
     public function __construct(
         private Client $client,
-        private CookieJar $cookieJar,
+        private CookieJarInterface $cookieJar,
         private string $username,
         private string $password,
         private ?LoggerInterface $logger = null
@@ -63,7 +63,8 @@ class CcnAuthenticateFilter
             array (
                 'json' => array(
                     'username' => $this->username,
-                    'password' => $this->password
+                    'password' => $this->password,
+                    'accepted_cookie_policy' => true
                 ),
                 // We'll use the default handler so we don't rerun our middleware
                 'handler' => Utils::chooseHandler()
