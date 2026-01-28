@@ -7,6 +7,7 @@ use GuzzleHttp\Utils;
 use GuzzleHttp\Cookie\CookieJar;
 use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
+use RCS\WP\WpMail\WpMailWrapper;
 
 class CcnAuthenticateFilter
 {
@@ -100,9 +101,17 @@ class CcnAuthenticateFilter
 */
         } else {
             if (!is_null($this->logger)) {
-                $this->logger->critical(
-                    'Unable to authenticate with CCN: ' . $resp->getStatusCode() . ' / ' . $resp->getBody()
-                    );
+                $msg = 'Unable to authenticate with CCN: ' . $resp->getStatusCode() . ' / ' . $resp->getBody();
+
+                $this->logger->critical($msg);
+
+                (new WpMailWrapper($this->logger))
+                    ->addTo('dev@raincitysolutions.com')
+                    ->setSubject('Unable to add authenticate with CCN')
+                    ->setPlainBody($msg)
+                    ->setFrom('dev@raincitysolutions.com', 'CCN Auth Error')
+                    ->sendMessage()
+                    ;
             }
         }
     }
