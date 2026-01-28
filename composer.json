@@ -41,7 +41,7 @@
 	},
 	"autoload-dev" : {
 		"psr-4" : {
-			"WSCL\\\\" : "test/WSCL"
+			"WSCL\\" : "test/WSCL"
 		}
 	},
 	"config" : {
