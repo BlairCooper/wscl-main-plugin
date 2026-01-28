@@ -5,7 +5,6 @@ namespace WSCL\Main\CcnBikes;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\RequestOptions;
-use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\UriTemplate\UriTemplate;
 use Psr\Log\LoggerInterface;
@@ -29,18 +28,20 @@ use WSCL\Main\CcnBikes\Enums\MembershipStatusEnum;
 use WSCL\Main\CcnBikes\Enums\ReportStateEnum;
 use WSCL\Main\CcnBikes\Filter\CcnAuthenticateFilter;
 use WSCL\Main\CcnBikes\Json\CcnFactoryRegistry;
+use WSCL\Main\CachedCookieJar;
+use GuzzleHttp\Cookie\CookieJar;
 
 
 class CcnClient
 {
     use JsonClientTrait;
 
-    private const USER_AGENT_PARTS = array (
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-        'AppleWebKit/605.1.15 (KHTML, like Gecko)',
-        'Chrome/140.0.7339.186',
-        'Safari/605.1.15'
-    );
+//     private const USER_AGENT_PARTS = array (
+//         'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+//         'AppleWebKit/605.1.15 (KHTML, like Gecko)',
+//         'Chrome/140.0.7339.186',
+//         'Safari/605.1.15'
+//     );
 
     private const CACHE_TTL = 600;
 
@@ -60,17 +61,18 @@ class CcnClient
         $this->restHost = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
 
         $logMiddleware =
-            null;
-//             \GuzzleHttp\Middleware::log(
-//                 $this->logger,
-//                 new \GuzzleHttp\MessageFormatter(\GuzzleHttp\MessageFormatter::DEBUG),
-//                 'debug'
-//                 );
+//            null;
+            \GuzzleHttp\Middleware::log(
+                $this->logger,
+                new \GuzzleHttp\MessageFormatter(\GuzzleHttp\MessageFormatter::DEBUG),
+                'debug'
+                );
 
         $this->client = self::getHttpClient(
             $options->getCcnRestApiUrl(),
             $options->getCcnUsername(),
             $options->getCcnPassword(),
+            $cache,
             $logMiddleware,
             $logger
             );
@@ -88,7 +90,7 @@ class CcnClient
             RequestOptions::HTTP_ERRORS => false,
             RequestOptions::DECODE_CONTENT => 'gzip, deflate',
             RequestOptions::HEADERS => array(
-                'User-Agent' => sprintf('"%s"', join(' ', self::USER_AGENT_PARTS)),
+//                'User-Agent' => sprintf('"%s"', join(' ', self::USER_AGENT_PARTS)),
                 )
             )
         );
@@ -98,11 +100,12 @@ class CcnClient
         string $url,
         string $username,
         string $password,
+        ?CacheInterface $cache = null,
         ?callable $logMiddleware = null,
         LoggerInterface $logger = null): Client
     {
         $uri = new Uri($url);
-        $cookieJar = new CookieJar();
+        $cookieJar = is_null($cache) ? new CookieJar() : new CachedCookieJar($cache, 'CcnClientCookies');
 
         $stack = HandlerStack::create();
 
@@ -117,7 +120,7 @@ class CcnClient
             RequestOptions::COOKIES => $cookieJar,
             RequestOptions::DECODE_CONTENT => 'gzip, deflate',
             RequestOptions::HEADERS => array(
-                'User-Agent' => sprintf('"%s"', join(' ', self::USER_AGENT_PARTS)),
+//                'User-Agent' => sprintf('"%s"', join(' ', self::USER_AGENT_PARTS)),
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
                 'Referer' => $referer

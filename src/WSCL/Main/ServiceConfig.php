@@ -159,7 +159,8 @@ class ServiceConfig
 //             },
 
             DatabaseUpdatesInterface::class => \DI\autowire(DatabaseUpdates::class),
-            DatabaseUpdater::class => \DI\autowire(),
+            DatabaseUpdater::class => \DI\autowire()
+                ->constructor(bgProcess: \DI\get(BgProcess::class)),    // Don't use BgProcessInterface to void constantly refreshing the CCN and MailerLite cached cookies
 
             PetitionsHelper::class => \DI\autowire(),
 

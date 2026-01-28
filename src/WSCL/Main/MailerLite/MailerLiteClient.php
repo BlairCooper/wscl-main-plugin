@@ -18,6 +18,7 @@ use WSCL\Main\MailerLite\Enums\SubscriberType;
 use WSCL\Main\MailerLite\Filter\MailerLiteAuthenticateFilter;
 use WSCL\Main\MailerLite\Filter\MailerLiteThrottleFilter;
 use WSCL\Main\MailerLite\Json\MailerLiteFactoryRegistry;
+use WSCL\Main\CachedCookieJar;
 
 class MailerLiteClient
 {
@@ -44,7 +45,8 @@ class MailerLiteClient
         $this->logger = $logger;
 
         $this->client = self::getHttpClient(
-            $options->getMailerLiteApiKey()
+            $options->getMailerLiteApiKey(),
+            $cache
 //             ,Middleware::log(
 //                 $this->logger,
 //                 new MessageFormatter(MessageFormatter::DEBUG),
@@ -53,9 +55,9 @@ class MailerLiteClient
             );
     }
 
-    private static function getHttpClient(string $authKey, callable $logMiddleware = null): Client
+    private static function getHttpClient(string $authKey, ?CacheInterface $cache = null, callable $logMiddleware = null): Client
     {
-        $cookieJar = new CookieJar();
+        $cookieJar = is_null($cache) ? new CookieJar() : new CachedCookieJar($cache, 'MailerLiteCacheKey');
 
         $stack = HandlerStack::create();
 
