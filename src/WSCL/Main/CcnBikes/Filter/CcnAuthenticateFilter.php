@@ -4,7 +4,7 @@ namespace WSCL\Main\CcnBikes\Filter;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Utils;
-use GuzzleHttp\Cookie\CookieJarInterface;
+use GuzzleHttp\Cookie\CookieJar;
 use Psr\Http\Message\RequestInterface;
 use Psr\Log\LoggerInterface;
 
@@ -19,7 +19,7 @@ class CcnAuthenticateFilter
 
     public function __construct(
         private Client $client,
-        private CookieJarInterface $cookieJar,
+        private CookieJar $cookieJar,
         private string $username,
         private string $password,
         private ?LoggerInterface $logger = null
