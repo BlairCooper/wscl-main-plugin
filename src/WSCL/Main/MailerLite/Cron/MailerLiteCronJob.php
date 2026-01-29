@@ -4,12 +4,13 @@ namespace WSCL\Main\MailerLite\Cron;
 
 use Psr\Log\LoggerInterface;
 use RCS\WP\CronJob;
+use RCS\WP\BgProcess\BgProcessInterface;
 use WSCL\Main\MailerLite\BgTasks\SyncSubscribersTask;
 
 class MailerLiteCronJob extends CronJob
 {
     public function __construct(
-        private MailerLiteBgProcess $bgProcess,
+        private BgProcessInterface $bgProcess,
         LoggerInterface $logger
         )
     {

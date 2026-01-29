@@ -165,7 +165,8 @@ class ServiceConfig
             MailerLiteClient::class => \DI\autowire(),
             RaceResultClient::class => \DI\autowire(),
 
-            MailerLiteCronJob::class => \DI\autowire(MailerLiteCronJob::class),
+            MailerLiteCronJob::class => \DI\autowire()
+                ->constructor(bgProcess: \DI\get(MailerLiteBgProcess::class)),
             ScholarshipsCronJob::class => \DI\autowire(ScholarshipsCronJob::class),
         ];
     }
