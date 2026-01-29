@@ -61,12 +61,12 @@ class CcnClient
         $this->restHost = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
 
         $logMiddleware =
-//            null;
-            \GuzzleHttp\Middleware::log(
-                $this->logger,
-                new \GuzzleHttp\MessageFormatter(\GuzzleHttp\MessageFormatter::DEBUG),
-                'debug'
-                );
+            null;
+//             \GuzzleHttp\Middleware::log(
+//                 $this->logger,
+//                 new \GuzzleHttp\MessageFormatter(\GuzzleHttp\MessageFormatter::DEBUG),
+//                 'debug'
+//                 );
 
         $this->client = self::getHttpClient(
             $options->getCcnRestApiUrl(),
