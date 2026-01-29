@@ -3,10 +3,13 @@ declare(strict_types = 1);
 namespace WSCL\Main;
 
 use Psr\Log\LoggerInterface;
+use Psr\SimpleCache\CacheInterface;
+use RCS\Cache\DataCache;
 use RCS\WP\PluginInfo;
 use RCS\WP\PluginInfoInterface;
 use RCS\WP\PluginLogger;
 use RCS\WP\PluginOptionsInterface;
+use RCS\WP\ShortcodeProxy;
 use RCS\WP\BgProcess\BgProcess;
 use RCS\WP\BgProcess\BgProcessInterface;
 use RCS\WP\Database\DatabaseUpdater;
@@ -15,12 +18,15 @@ use WSCL\Main\CcnBikes\CcnBikesOptionsInterface;
 use WSCL\Main\CcnBikes\CcnClient;
 use WSCL\Main\MailerLite\MailerLiteClient;
 use WSCL\Main\MailerLite\MailerLiteOptionsInterface;
+use WSCL\Main\MailerLite\Cron\MailerLiteBgProcess;
 use WSCL\Main\MailerLite\Cron\MailerLiteCronJob;
 use WSCL\Main\Maps\TeamMapShortcode;
 use WSCL\Main\Maps\VenueMapShortcode;
 use WSCL\Main\Petitions\PetitionsHelper;
+use WSCL\Main\RaceResult\RaceResultClient;
 use WSCL\Main\Scholarships\ScholarshipOptionsInterface;
 use WSCL\Main\Scholarships\ScholarshipOptionsTab;
+use WSCL\Main\Scholarships\ScholarshipsHelper;
 use WSCL\Main\Scholarships\Cron\ScholarshipsCronJob;
 use WSCL\Main\Scholarships\Shortcodes\ProgramBalanceShortcode;
 use WSCL\Main\Scholarships\Shortcodes\ProgramFeeShortcode;
@@ -53,11 +59,6 @@ use WSCL\Main\Staging\Controllers\NameMapController;
 use WSCL\Main\Staging\Controllers\RaceController;
 use WSCL\Main\Staging\Controllers\RaceResultController;
 use WSCL\Main\Staging\Controllers\StagingController;
-use Psr\SimpleCache\CacheInterface;
-use RCS\Cache\DataCache;
-use WSCL\Main\RaceResult\RaceResultClient;
-use RCS\WP\ShortcodeProxy;
-use WSCL\Main\Scholarships\ScholarshipsHelper;
 
 class ServiceConfig
 {
@@ -85,13 +86,8 @@ class ServiceConfig
 
             ScholarshipsHelper::class => \DI\autowire(),
 
-            BgProcessInterface::class => \DI\autowire(BgProcess::class)
-                ->constructor(params:
-                    [
-                        CcnClient::class => \DI\get(CcnClient::class),
-                        MailerLiteClient::class =>\DI\get(MailerLiteClient::class)
-                    ]
-                    ),
+            BgProcessInterface::class => \DI\autowire(BgProcess::class),
+            MailerLiteBgProcess::class => \DI\autowire(),
 
             self::SETTINGS_TABS => [
                 \DI\autowire(GeneralOptionsTab::class),
@@ -159,8 +155,7 @@ class ServiceConfig
 //             },
 
             DatabaseUpdatesInterface::class => \DI\autowire(DatabaseUpdates::class),
-            DatabaseUpdater::class => \DI\autowire()
-                ->constructor(bgProcess: \DI\get(BgProcess::class)),    // Don't use BgProcessInterface to void constantly refreshing the CCN and MailerLite cached cookies
+            DatabaseUpdater::class => \DI\autowire(),
 
             PetitionsHelper::class => \DI\autowire(),
 

@@ -5,18 +5,15 @@ namespace WSCL\Main\MailerLite\Cron;
 use Psr\Log\LoggerInterface;
 use RCS\WP\CronJob;
 use WSCL\Main\MailerLite\BgTasks\SyncSubscribersTask;
-use RCS\WP\BgProcess\BgProcessInterface;
 
 class MailerLiteCronJob extends CronJob
 {
     public function __construct(
-        private BgProcessInterface $bgProcess,
+        private MailerLiteBgProcess $bgProcess,
         LoggerInterface $logger
         )
     {
         parent::__construct($logger);
-
-        $this->bgProcess = $bgProcess;
 
         $this->initializeCronJob('WsclMailerLiteDailyCron', 'daily');
     }
