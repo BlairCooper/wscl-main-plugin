@@ -308,7 +308,7 @@ class MailerLiteClient
                 );
             $this->logger->error($msg);
 
-            $result = (new WpMailWrapper($this->logger))
+            (new WpMailWrapper($this->logger))
                 ->addTo($this->options->getDeveloperEmailAddress())
                 ->setSubject('Unable to add subscriber to MailerLite')
                 ->setPlainBody($msg)
