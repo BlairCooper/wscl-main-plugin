@@ -8,7 +8,7 @@ namespace WSCL\Main;
  * @wordpress-plugin
  * Plugin Name:         WSCL Main site Customizations
  * Description:         Plugin to support customizations for the washingtonleague.org website.
- * Version:             2.0.18
+ * Version:             2.0.19
  * Requires at least:   6.8.0
  * Requires PHP:        8.2
  * Author:              Blair Cooper
