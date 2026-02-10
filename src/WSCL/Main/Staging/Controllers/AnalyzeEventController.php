@@ -58,7 +58,7 @@ class AnalyzeEventController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function analyzeRiders(\WP_REST_Request $request): \WP_REST_Response|\WP_Error   // @phpstan-ignore  missingType.generics
+    public function analyzeRiders(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
         $eventId = intval($request['eventId']);
@@ -123,7 +123,7 @@ class AnalyzeEventController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function analyzeTeamScoring(\WP_REST_Request $request): \WP_REST_Response|\WP_Error  // @phpstan-ignore  missingType.generics
+    public function analyzeTeamScoring(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
         $eventId = intval($request['eventId']);

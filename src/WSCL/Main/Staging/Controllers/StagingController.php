@@ -53,7 +53,7 @@ class StagingController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function runStaging(\WP_REST_Request $request): \WP_REST_Response|\WP_Error  // @phpstan-ignore  missingType.generics
+    public function runStaging(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
 

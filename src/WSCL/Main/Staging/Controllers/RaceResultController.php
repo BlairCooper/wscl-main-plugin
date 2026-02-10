@@ -68,7 +68,7 @@ class RaceResultController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function getEvents(\WP_REST_Request $request): \WP_REST_Response|\WP_Error   // @phpstan-ignore  missingType.generics
+    public function getEvents(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
 
@@ -96,7 +96,7 @@ class RaceResultController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function getEventsByYear(\WP_REST_Request $request): \WP_REST_Response|\WP_Error // @phpstan-ignore  missingType.generics
+    public function getEventsByYear(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
 
@@ -126,7 +126,7 @@ class RaceResultController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function getEventsBySeason(\WP_REST_Request $request): \WP_REST_Response|\WP_Error   // @phpstan-ignore  missingType.generics
+    public function getEventsBySeason(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
 
@@ -161,7 +161,7 @@ class RaceResultController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function getEventsByEvent(\WP_REST_Request $request): \WP_REST_Response|\WP_Error    // @phpstan-ignore  missingType.generics
+    public function getEventsByEvent(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
 
@@ -198,7 +198,7 @@ class RaceResultController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function getEventSettings(\WP_REST_Request $request): \WP_REST_Response|\WP_Error    // @phpstan-ignore  missingType.generics
+    public function getEventSettings(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
 
@@ -222,7 +222,7 @@ class RaceResultController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function getSeasonPoints(\WP_REST_Request $request): \WP_REST_Response|\WP_Error // @phpstan-ignore  missingType.generics
+    public function getSeasonPoints(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
         $eventId = intval($request['eventId']);
@@ -243,7 +243,7 @@ class RaceResultController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function getRiderTimingData(\WP_REST_Request $request): \WP_REST_Response|\WP_Error  // @phpstan-ignore  missingType.generics
+    public function getRiderTimingData(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
         $eventId = intval($request['eventId']);

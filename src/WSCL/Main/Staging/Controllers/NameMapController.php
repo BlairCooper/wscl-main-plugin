@@ -51,7 +51,7 @@ class NameMapController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function getMappings(\WP_REST_Request $request): \WP_REST_Response|\WP_Error // @phpstan-ignore  missingType.generics
+    public function getMappings(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $map = NameMap::getInstance();
 
@@ -65,7 +65,7 @@ class NameMapController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function getMappingsByType(\WP_REST_Request $request): \WP_REST_Response|\WP_Error   // @phpstan-ignore  missingType.generics
+    public function getMappingsByType(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $map = NameMap::getInstance();
 
@@ -79,7 +79,7 @@ class NameMapController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function getMapping(\WP_REST_Request $request): \WP_REST_Response|\WP_Error  // @phpstan-ignore  missingType.generics
+    public function getMapping(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $entryId = intval($request['entryId']);
 
@@ -102,7 +102,7 @@ class NameMapController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function createMapping(\WP_REST_Request $request): \WP_REST_Response|\WP_Error   // @phpstan-ignore  missingType.generics
+    public function createMapping(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
 
@@ -145,7 +145,7 @@ class NameMapController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function updateMapping(\WP_REST_Request $request): \WP_REST_Response|\WP_Error   // @phpstan-ignore  missingType.generics
+    public function updateMapping(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
 
@@ -177,7 +177,7 @@ class NameMapController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function deleteMapping(\WP_REST_Request $request): \WP_REST_Response|\WP_Error   // @phpstan-ignore  missingType.generics
+    public function deleteMapping(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
         $entryId = intval($request['entryId']);

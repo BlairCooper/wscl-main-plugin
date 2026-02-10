@@ -42,7 +42,7 @@ class EventController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function getEvents(\WP_REST_Request $request): \WP_REST_Response|\WP_Error   // @phpstan-ignore  missingType.generics
+    public function getEvents(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $postQuery = array(
             'numberposts' => -1,
@@ -71,7 +71,7 @@ class EventController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function getEvent(\WP_REST_Request $request): \WP_REST_Response|\WP_Error    // @phpstan-ignore  missingType.generics
+    public function getEvent(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $eventId = intval($request['eventId']);
 
@@ -93,7 +93,7 @@ class EventController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function createEvent(\WP_REST_Request $request): \WP_REST_Response|\WP_Error // @phpstan-ignore  missingType.generics
+    public function createEvent(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
 
@@ -163,7 +163,7 @@ class EventController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function updateEvent(\WP_REST_Request $request): \WP_REST_Response|\WP_Error // @phpstan-ignore  missingType.generics
+    public function updateEvent(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
 
@@ -208,7 +208,7 @@ class EventController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function deleteEvent(\WP_REST_Request $request): \WP_REST_Response|\WP_Error // @phpstan-ignore  missingType.generics
+    public function deleteEvent(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
         $eventId = intval($request['eventId']);

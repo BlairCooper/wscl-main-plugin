@@ -86,7 +86,7 @@ class CategoryController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function getCategories(\WP_REST_Request $request): \WP_REST_Response|\WP_Error   // @phpstan-ignore  missingType.generics
+    public function getCategories(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
         $eventId = intval($request['eventId']);
@@ -109,7 +109,7 @@ class CategoryController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function getCategory(\WP_REST_Request $request): \WP_REST_Response|\WP_Error // @phpstan-ignore  missingType.generics
+    public function getCategory(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
         $eventId = intval($request['eventId']);
@@ -137,7 +137,7 @@ class CategoryController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function createCategory(\WP_REST_Request $request): \WP_REST_Response|\WP_Error  // @phpstan-ignore  missingType.generics
+    public function createCategory(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
         $eventId = intval($request['eventId']);
@@ -180,7 +180,7 @@ class CategoryController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function updateCategory(\WP_REST_Request $request): \WP_REST_Response|\WP_Error  // @phpstan-ignore  missingType.generics
+    public function updateCategory(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
         $eventId = intval($request['eventId']);
@@ -224,7 +224,7 @@ class CategoryController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function deleteCategory(\WP_REST_Request $request): \WP_REST_Response|\WP_Error  // @phpstan-ignore  missingType.generics
+    public function deleteCategory(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
         $eventId = intval($request['eventId']);

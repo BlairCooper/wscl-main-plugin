@@ -83,7 +83,7 @@ class RaceController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function getRaces(\WP_REST_Request $request): \WP_REST_Response|\WP_Error    // @phpstan-ignore  missingType.generics
+    public function getRaces(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
         $eventId = intval($request['eventId']);
@@ -106,7 +106,7 @@ class RaceController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function getRace(\WP_REST_Request $request): \WP_REST_Response|\WP_Error // @phpstan-ignore  missingType.generics
+    public function getRace(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
         $eventId = intval($request['eventId']);
@@ -134,7 +134,7 @@ class RaceController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function createRace(\WP_REST_Request $request): \WP_REST_Response|\WP_Error  // @phpstan-ignore  missingType.generics
+    public function createRace(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
         $eventId = intval($request['eventId']);
@@ -173,7 +173,7 @@ class RaceController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function updateRace(\WP_REST_Request $request): \WP_REST_Response|\WP_Error  // @phpstan-ignore  missingType.generics
+    public function updateRace(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
         $eventId = intval($request['eventId']);
@@ -213,7 +213,7 @@ class RaceController extends StagingRestController
      *
      * @return \WP_REST_Response|\WP_Error
      */
-    public function deleteRace(\WP_REST_Request $request): \WP_REST_Response|\WP_Error  // @phpstan-ignore  missingType.generics
+    public function deleteRace(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
     {
         $result = false;
         $eventId = intval($request['eventId']);
