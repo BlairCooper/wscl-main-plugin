@@ -73,7 +73,7 @@ class Coupon extends JsonEntity implements \JsonSerializable
         $coupon->appLabel = 'event_app';
         $coupon->objectId = '6799';   //TODO: this should be passed in along with name and model
 
-        $today = new JsonDateTime();
+        $today = new JsonDateTime('now', new \DateTimeZone('America/Los_Angeles'));
         $today->setTime(0, 0);
 
         $coupon->fromDate = clone $today;   // make a copy
