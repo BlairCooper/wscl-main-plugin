@@ -168,6 +168,8 @@ class ServiceConfig
             MailerLiteCronJob::class => \DI\autowire()
                 ->constructor(bgProcess: \DI\get(MailerLiteBgProcess::class)),
             ScholarshipsCronJob::class => \DI\autowire(ScholarshipsCronJob::class),
+
+            SgSecurityHelper::class => \DI\autowire(),
         ];
     }
 }

@@ -126,6 +126,8 @@ class WsclMainPlugin
         $container->get(ServiceConfig::STAGING_REST_CONTROLLERS);
 
         $container->get(PetitionsHelper::class);
+        $container->get(SgSecurityHelper::class);
+
 
         if (is_admin()) {
             $container->get(WsclMainAdminSettings::class);
