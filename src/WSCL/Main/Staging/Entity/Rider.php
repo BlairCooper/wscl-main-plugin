@@ -35,7 +35,7 @@ class Rider     // NOSONAR - ignore too many methods
 
     public static function isHighSchool(string $category): bool
     {
-        return boolval(preg_match("/^(High School|Beginner|Intermediate|JV|Varsity|Open).*$/", $category));
+        return boolval(preg_match("/^(High School|Beginner|Intermediate|JV|Varsity|Open|Cat 1|Cat 2).*$/", $category));
     }
 
     /**
