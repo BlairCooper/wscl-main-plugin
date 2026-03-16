@@ -54,6 +54,7 @@ class PetitionsHelper
         add_action('frm_after_update_entry', [$this, 'frmAfterUpdateEntry'], 20, 2);
 
         add_filter('frm_skip_form_action', [$this, 'frmSkipFormAction'], 20, 2);
+        add_filter('frm_order_lookup_options', [$this, 'frmOrderLookupOptions'], 20, 3);
 
         add_action('wp_enqueue_scripts', [$this, 'wpEnqueueScripts'], 20);
         add_action('wp_ajax_'.self::AJAX_ACTION_PETITION_APPROVAL, [$this, 'ajaxHandlePetitionApproval']);
@@ -167,5 +168,37 @@ class PetitionsHelper
         }
 
         wp_die(); // All ajax handlers die when finished
+    }
+
+    /**
+     *
+     * @param string[] $values
+     * @param string $order
+     * @param array<string, mixed>|object $field
+     *
+     * @return string[]
+     */
+    public function frmOrderLookupOptions(array $values, string $order, array|object $field): array
+    {
+        $fieldId = is_array($field) ? $field['id'] : $field->id;
+
+        if (Formidable::getFieldId(self::FLD_PR_CURRENT_CATEGORY) == $fieldId ||
+            Formidable::getFieldId(self::FLD_PR_REQUESTED_CATEGORY) == $fieldId
+            )
+        {
+            $msCats = array_filter($values, fn($cat) => str_starts_with($cat, 'Middle School'));
+            $hsCats = array_filter($values, fn($cat) => str_starts_with($cat, 'High School'));
+            $jvCats = array_filter($values, fn($cat) => str_contains($cat, 'JV'));
+            $vCats = array_filter($values, fn($cat) => str_contains($cat, 'Varsity'));
+
+            sort($msCats);
+            sort($hsCats);
+            sort($jvCats);
+            sort($vCats);
+
+            $values = array_merge($msCats, $hsCats, $jvCats, $vCats);
+        }
+
+        return $values;
     }
 }
