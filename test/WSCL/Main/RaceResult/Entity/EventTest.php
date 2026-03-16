@@ -103,7 +103,8 @@ class EventTest extends TestCase
             array('2023-09-01', '2022-10-17', EventSeason::PREVIOUS), // Fall date, fall race (last year)
             array('2023-04-01', '2022-10-17', EventSeason::LAST),     // Spring date, fall race (last year)
             array('2023-03-31', '2022-05-17', EventSeason::PREVIOUS), // Spring date, spring race (last year)
-            array('2023-02-15', '2021-05-17', EventSeason::EARLIER)   // Spring date, spring race (two years ago)
+            array('2023-02-15', '2021-05-17', EventSeason::EARLIER),  // Spring date, spring race (two years ago)
+            array('2023-02-15', '2023-09-17', EventSeason::FUTURE)    // Spring date, spring race in the future
         );
     }
 }

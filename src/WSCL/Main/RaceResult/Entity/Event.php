@@ -97,11 +97,11 @@ class Event extends JsonEntity
 
     private function getEventSeasonCurrentYear(bool $springDate, bool $isSpringRace): EventSeason
     {
-        if ($springDate && $isSpringRace || !$springDate && !$isSpringRace) {
+        if (($springDate && $isSpringRace) || (!$springDate && !$isSpringRace)) {
             $eventSeason = EventSeason::CURRENT;
         }
         else {
-            if (!$springDate && $isSpringRace) {
+            if (!$springDate && $isSpringRace) {    /** @phpstan-ignore booleanAnd.rightAlwaysTrue */ // mistakenly thinks this is the case
                 $eventSeason = EventSeason::LAST;
             } else {
                 $eventSeason = EventSeason::FUTURE;
