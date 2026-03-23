@@ -249,9 +249,23 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
 
     public function validateRider(LoggerInterface $logger, RiderAttributeUpdate $attrUpdate): bool
     {
+        $this->validateRacePlateName($logger, $attrUpdate);
+        $this->validateRaceGender($logger, $attrUpdate);
+        $this->validateRaceCategory($attrUpdate);
+
+        $this->validateParentNames($logger);
+        $this->validateEmergencyContacts($logger);
+
+        $this->team = NameMap::getInstance()->getMappedName('Team', $this->team);
+
+        return !$this->missingData;
+    }
+
+    private function validateRacePlateName(LoggerInterface $logger, RiderAttributeUpdate $attrUpdate): void
+    {
         if (empty($this->racePlateName)) {
-             $this->racePlateName = $this->firstName;
-             $attrUpdate->setRacePlateName($this->racePlateName);
+            $this->racePlateName = $this->firstName;
+            $attrUpdate->setRacePlateName($this->racePlateName);
         }
 
         if (strlen($this->racePlateName) > self::RACE_PLATE_NAME_MAX_LEN) {
@@ -273,11 +287,20 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
                         )
                     );
                 $this->missingData = true;
+            } else {
+                $this->checkForUppercase($this->racePlateName, 'Race Plate Name', $logger);
             }
         }
+    }
 
+
+    private function validateRaceGender(LoggerInterface $logger, RiderAttributeUpdate $attrUpdate): void
+    {
         if (empty($this->raceGender)) {
-            if ('U' == $this->gender) {
+            if ('U' == $this->gender &&
+                (empty($this->raceCatCurrSeason) || !strstr($this->raceCatCurrSeason, 'Open'))
+                )
+            {
                 $logger->critical(
                     sprintf(
                         'Race Gender not set for "Unspecified" rider %s %s with %s',
@@ -292,7 +315,10 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
                 $attrUpdate->setRaceGender($this->raceGender);
             }
         }
+    }
 
+    private function validateRaceCategory(RiderAttributeUpdate $attrUpdate): void
+    {
         if (empty($this->raceCatCurrSeason) && !empty($this->raceGender)) {
             $category = $this->getRaceCategory();
 
@@ -303,10 +329,30 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
             $this->raceCatCurrSeason = $category;
             $attrUpdate->setRaceCategory($this->raceCatCurrSeason);
         }
+    }
 
-        $this->team = NameMap::getInstance()->getMappedName('Team', $this->team);
 
-        return !$this->missingData;
+    private function validateParentNames(LoggerInterface $logger): void
+    {
+        $this->checkForUppercase($this->parent1FirstName, 'Parent 1 FirstName', $logger);
+        $this->checkForUppercase($this->parent1LastName, 'Parent 1 LastName', $logger);
+        $this->checkForUppercase($this->parent2FirstName, 'Parent 2 FirstName', $logger);
+        $this->checkForUppercase($this->parent2LastName, 'Parent 2 LastName', $logger);
+    }
+
+    private function validateEmergencyContacts(LoggerInterface $logger): void
+    {
+        $this->checkForUppercase($this->emergencyContact1FirstName, 'Emergency Contact 1 FirstName', $logger);
+        $this->checkForUppercase($this->emergencyContact1LastName, 'Emergencty Contact 1 LastName', $logger);
+        $this->checkForUppercase($this->emergencyContact2FirstName, 'Emergency Contact 2 FirstName', $logger);
+        $this->checkForUppercase($this->emergencyContact2LastName, 'Emergencty Contact 2 LastName', $logger);
+    }
+
+    private function checkForUppercase(string $fieldValue, string $fieldName, LoggerInterface $logger): void
+    {
+        if (!empty($fieldValue) && $fieldValue == strtoupper($fieldValue)) {
+            $logger->error($fieldName . ' is all uppercase ' . $fieldValue);
+        }
     }
 
     /**
@@ -351,7 +397,10 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
                     $this->grade
                     );
             } else { // Must be 9th grade or higher
-                $category = $this->getHighSchoolCategory($this->raceCatLastSeason, $this->raceCatPrevSeason);
+                $category = $this->getHighSchoolCategory(
+                    $this->raceCatLastSeason,
+                    $this->raceCatPrevSeason
+                    );
             }
         }
 
