@@ -288,7 +288,17 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
                     );
                 $this->missingData = true;
             } else {
-                $this->checkForUppercase($this->racePlateName, 'Race Plate Name', $logger);
+                if (is_numeric($this->racePlateName)) {
+                    $logger->critical(
+                        sprintf(
+                            'Race Plate Name for %s %s is a number',
+                            $this->firstName,
+                            $this->lastName
+                            )
+                        );
+                } else {
+                    $this->checkForUppercase($this->racePlateName, 'Race Plate Name', $logger);
+                }
             }
         }
     }
@@ -334,23 +344,34 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
 
     private function validateParentNames(LoggerInterface $logger): void
     {
-        $this->checkForUppercase($this->parent1FirstName, 'Parent 1 FirstName', $logger);
-        $this->checkForUppercase($this->parent1LastName, 'Parent 1 LastName', $logger);
-        $this->checkForUppercase($this->parent2FirstName, 'Parent 2 FirstName', $logger);
-        $this->checkForUppercase($this->parent2LastName, 'Parent 2 LastName', $logger);
+        $this->checkForUppercase($this->getParent1FirstName(), 'Parent 1 FirstName', $logger);
+        $this->checkForUppercase($this->getParent1LastName(), 'Parent 1 LastName', $logger);
+        $this->checkForUppercase($this->getParent2FirstName(), 'Parent 2 FirstName', $logger);
+        $this->checkForUppercase($this->getParent2LastName(), 'Parent 2 LastName', $logger);
     }
 
     private function validateEmergencyContacts(LoggerInterface $logger): void
     {
-        $this->checkForUppercase($this->emergencyContact1FirstName, 'Emergency Contact 1 FirstName', $logger);
-        $this->checkForUppercase($this->emergencyContact1LastName, 'Emergencty Contact 1 LastName', $logger);
-        $this->checkForUppercase($this->emergencyContact2FirstName, 'Emergency Contact 2 FirstName', $logger);
-        $this->checkForUppercase($this->emergencyContact2LastName, 'Emergencty Contact 2 LastName', $logger);
+        $this->checkForUppercase($this->getEmergencyContact1FirstName(), 'Emergency Contact 1 FirstName', $logger);
+        $this->checkForUppercase($this->getEmergencyContact1LastName(), 'Emergencty Contact 1 LastName', $logger);
+        $this->checkForUppercase($this->getEmergencyContact2FirstName(), 'Emergency Contact 2 FirstName', $logger);
+        $this->checkForUppercase($this->getEmergencyContact2LastName(), 'Emergencty Contact 2 LastName', $logger);
     }
 
+    /**
+     * Check if field value is all uppercase and does not appear to be an abbreviation.
+     *
+     * @param string $fieldValue
+     * @param string $fieldName
+     * @param LoggerInterface $logger
+     */
     private function checkForUppercase(string $fieldValue, string $fieldName, LoggerInterface $logger): void
     {
-        if (!empty($fieldValue) && $fieldValue == strtoupper($fieldValue)) {
+        if (!empty($fieldValue) &&
+            $fieldValue == strtoupper($fieldValue) &&
+            strlen($fieldValue) > 4
+            )
+        {
             $logger->error($fieldName . ' is all uppercase ' . $fieldValue);
         }
     }
