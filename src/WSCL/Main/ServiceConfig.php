@@ -59,6 +59,7 @@ use WSCL\Main\Staging\Controllers\NameMapController;
 use WSCL\Main\Staging\Controllers\RaceController;
 use WSCL\Main\Staging\Controllers\RaceResultController;
 use WSCL\Main\Staging\Controllers\StagingController;
+use WSCL\Main\CcnBikes\BgTasks\CcnBikesBgProcess;
 
 class ServiceConfig
 {
@@ -88,6 +89,7 @@ class ServiceConfig
 
             BgProcessInterface::class => \DI\autowire(BgProcess::class),
             MailerLiteBgProcess::class => \DI\autowire(),
+            CcnBikesBgProcess::class => \DI\autowire(),
 
             self::SETTINGS_TABS => [
                 \DI\autowire(GeneralOptionsTab::class),
@@ -136,7 +138,7 @@ class ServiceConfig
                 \DI\autowire(RaceController::class)
                     ->constructor(apiVersion: 1, apiRoute: '/staging'),
                 \DI\autowire(StagingController::class)
-                    ->constructor(apiVersion: 1, apiRoute: '/staging', rrClient: \DI\get(RaceResultClient::class)),
+                    ->constructor(apiVersion: 1, apiRoute: '/staging', rrClient: \DI\get(RaceResultClient::class), bgProcess: \DI\get(CcnBikesBgProcess::class)),
                 \DI\autowire(NameMapController::class)
                     ->constructor(apiVersion: 1, apiRoute: '/staging'),
                 \DI\autowire(RaceResultController::class)
