@@ -88,10 +88,12 @@ class TimingLoader
     {
         if ($timingRcd->getRegSysId() !== $seasonPoints->getId()) {
             $this->logger->info(
-                'New registration record for {fname} {lname}',
+                'New registration record for {fname} {lname}. New ID: {newId}  Old ID: {oldId}',
                 [
                     'fname' => $timingRcd->getFirstName(),
-                    'lname' => $timingRcd->getLastName()
+                    'lname' => $timingRcd->getLastName(),
+                    'newId' => $timingRcd->getRegSysId(),
+                    'oldId' => $seasonPoints->getId()
                 ]
                 );
         }
