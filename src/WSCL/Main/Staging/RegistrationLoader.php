@@ -47,7 +47,7 @@ class RegistrationLoader
             $mapper->push(CcnRiderImportRcd::getValueTransformer());
             $mapper->push($this->getCallback());
 
-            $reader = Reader::createFromPath($regFile);
+            $reader = Reader::from($regFile);
             $reader->skipInputBOM();
             $reader->setHeaderOffset(0);
 
@@ -55,7 +55,7 @@ class RegistrationLoader
             $header = $this->remapHeaders($header, self::getCategoryHeaderMap());
             $header = $this->remapHeaders($header, CcnRiderImportRcd::getColumnPropertyMap());
 
-            $resultSet = Statement::create()
+            $resultSet = (new Statement())
                 ->where(array('WSCL\Main\CcnBikes\Csv\RecordFilter', 'leagueCsvFilter'))
                 ->process($reader, $header);
 
