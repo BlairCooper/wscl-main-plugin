@@ -249,9 +249,11 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
 
     public function validateRider(LoggerInterface $logger, RiderAttributeUpdate $attrUpdate): bool
     {
+        $this->validateRiderName($logger);
         $this->validateRacePlateName($logger, $attrUpdate);
         $this->validateRaceGender($logger, $attrUpdate);
         $this->validateRaceCategory($attrUpdate);
+        $this->validateUsacLicense($logger);
 
         $this->validateParentNames($logger);
         $this->validateEmergencyContacts($logger);
@@ -259,6 +261,12 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
         $this->team = NameMap::getInstance()->getMappedName('Team', $this->team);
 
         return !$this->missingData;
+    }
+
+    private function validateRiderName(LoggerInterface $logger): void
+    {
+        $this->checkForCamelCase($this->getFirstName(), 'FirstName', $logger);
+        $this->checkForCamelCase($this->getLastName(), 'LastName', $logger);
     }
 
     private function validateRacePlateName(LoggerInterface $logger, RiderAttributeUpdate $attrUpdate): void
@@ -296,13 +304,24 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
                             $this->lastName
                             )
                         );
+                    $this->missingData = true;
                 } else {
-                    $this->checkForUppercase($this->racePlateName, 'Race Plate Name', $logger);
+                    if (!preg_match('/[a-zA-Z\$ ]+/', $this->racePlateName)) {
+                        $logger->critical(
+                            sprintf(
+                                'Race Plate Name for %s %s contains invalid characters',
+                                $this->firstName,
+                                $this->lastName
+                                )
+                            );
+                        $this->missingData = true;
+                    } else {
+                        $this->checkForCamelCase($this->racePlateName, 'Race Plate Name', $logger);
+                    }
                 }
             }
         }
     }
-
 
     private function validateRaceGender(LoggerInterface $logger, RiderAttributeUpdate $attrUpdate): void
     {
@@ -327,6 +346,28 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
         }
     }
 
+    private function validateUsacLicense(LoggerInterface $logger): void
+    {
+        if (!empty($this->usacLicense) &&
+            (
+                !is_numeric($this->usacLicense) ||
+                400000 > $this->usacLicense ||
+                999999 < $this->usacLicense
+            )
+            )
+        {
+            $logger->critical(
+                sprintf(
+                    'USA Cycling License (%s) is invalid for %s %s',
+                    $this->usacLicense,
+                    $this->firstName,
+                    $this->lastName
+                    )
+                );
+            $this->missingData = true;
+        }
+    }
+
     private function validateRaceCategory(RiderAttributeUpdate $attrUpdate): void
     {
         if (empty($this->raceCatCurrSeason) && !empty($this->raceGender)) {
@@ -344,35 +385,39 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
 
     private function validateParentNames(LoggerInterface $logger): void
     {
-        $this->checkForUppercase($this->getParent1FirstName(), 'Parent 1 FirstName', $logger);
-        $this->checkForUppercase($this->getParent1LastName(), 'Parent 1 LastName', $logger);
-        $this->checkForUppercase($this->getParent2FirstName(), 'Parent 2 FirstName', $logger);
-        $this->checkForUppercase($this->getParent2LastName(), 'Parent 2 LastName', $logger);
+        $this->checkForCamelCase($this->getParent1FirstName(), 'Parent 1 FirstName', $logger);
+        $this->checkForCamelCase($this->getParent1LastName(), 'Parent 1 LastName', $logger);
+        $this->checkForCamelCase($this->getParent2FirstName(), 'Parent 2 FirstName', $logger);
+        $this->checkForCamelCase($this->getParent2LastName(), 'Parent 2 LastName', $logger);
     }
 
     private function validateEmergencyContacts(LoggerInterface $logger): void
     {
-        $this->checkForUppercase($this->getEmergencyContact1FirstName(), 'Emergency Contact 1 FirstName', $logger);
-        $this->checkForUppercase($this->getEmergencyContact1LastName(), 'Emergencty Contact 1 LastName', $logger);
-        $this->checkForUppercase($this->getEmergencyContact2FirstName(), 'Emergency Contact 2 FirstName', $logger);
-        $this->checkForUppercase($this->getEmergencyContact2LastName(), 'Emergencty Contact 2 LastName', $logger);
+        $this->checkForCamelCase($this->getEmergencyContact1FirstName(), 'Emergency Contact 1 FirstName', $logger);
+        $this->checkForCamelCase($this->getEmergencyContact1LastName(), 'Emergencty Contact 1 LastName', $logger);
+        $this->checkForCamelCase($this->getEmergencyContact2FirstName(), 'Emergency Contact 2 FirstName', $logger);
+        $this->checkForCamelCase($this->getEmergencyContact2LastName(), 'Emergencty Contact 2 LastName', $logger);
     }
 
     /**
-     * Check if field value is all uppercase and does not appear to be an abbreviation.
+     * Check if field value is all uppercase, all lowercase, and does not
+     * appear to be an abbreviation.
      *
      * @param string $fieldValue
      * @param string $fieldName
      * @param LoggerInterface $logger
      */
-    private function checkForUppercase(string $fieldValue, string $fieldName, LoggerInterface $logger): void
+    private function checkForCamelCase(string $fieldValue, string $fieldName, LoggerInterface $logger): void
     {
         if (!empty($fieldValue) &&
-            $fieldValue == strtoupper($fieldValue) &&
-            strlen($fieldValue) > 4
+            (
+                ($fieldValue == strtoupper($fieldValue) && strlen($fieldValue) > 4) ||
+                $fieldValue == strtolower($fieldValue)
             )
-        {
-            $logger->error($fieldName . ' is all uppercase ' . $fieldValue);
+        ) {
+            $logger->error($fieldName . ' is either all upper or all lower case ' . $fieldValue);
+
+            $this->missingData = true;
         }
     }
 
