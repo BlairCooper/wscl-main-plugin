@@ -106,19 +106,19 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
     #[CsvBindByName(column: 'Emergency Contact 1 : First Name')]
     public string $emergencyContact1FirstName;
 
-    #[CsvBindByName(column: 'Emergency Contact 1: Last Name')]
+    #[CsvBindByName(column: 'Emergency Contact 1 : Last Name')]
     public string $emergencyContact1LastName;
 
-    #[CsvBindByName(column: 'Emergency Contact 1: Cell Phone')]
+    #[CsvBindByName(column: 'Emergency Contact 1 : Cell Phone')]
     public string $emergencyContact1CellPhone;
 
     #[CsvBindByName(column: 'Emergency Contact 1: Work Phone')]
     public string $emergencyContact1WorkPhone;
 
-    #[CsvBindByName(column: 'Emergency Contact 2: First Name')]
+    #[CsvBindByName(column: 'Emergency Contact 2 : First Name')]
     public string $emergencyContact2FirstName;
 
-    #[CsvBindByName(column: 'Emergency Contact 2: Last Name')]
+    #[CsvBindByName(column: 'Emergency Contact 2 : Last Name')]
     public string $emergencyContact2LastName;
 
     #[CsvBindByName(column: 'Emergency Contact 2: Cell Phone')]
@@ -394,7 +394,7 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
     private function validateEmergencyContacts(LoggerInterface $logger): void
     {
         $this->checkForCamelCase($this->getEmergencyContact1FirstName(), 'Emergency Contact 1 FirstName', $logger);
-        $this->checkForCamelCase($this->getEmergencyContact1LastName(), 'Emergencty Contact 1 LastName', $logger);
+        $this->checkForCamelCase($this->getEmergencyContact1LastName(), 'Emergency Contact 1 LastName', $logger);
         $this->checkForCamelCase($this->getEmergencyContact2FirstName(), 'Emergency Contact 2 FirstName', $logger);
         $this->checkForCamelCase($this->getEmergencyContact2LastName(), 'Emergencty Contact 2 LastName', $logger);
     }
@@ -415,7 +415,14 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
                 $fieldValue == strtolower($fieldValue)
             )
         ) {
-            $logger->error($fieldName . ' is either all upper or all lower case ' . $fieldValue);
+            $logger->error(
+                '{field} is either all upper or all lower case ({value}) for {rider}',
+                [
+                    'field' => $fieldName,
+                    'value' => $fieldValue,
+                    'rider' => $this->getFirstName() . ' ' . $this->getLastName()
+                ]
+                );
 
             $this->missingData = true;
         }
