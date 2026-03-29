@@ -84,12 +84,7 @@ class StagingApp
         string $regFile
         ): array
     {
-        $result = [];
-
-        $wpUploadDir = wp_upload_dir()['basedir'];
-        $wpUploadUrl = wp_upload_dir()['baseurl'];
-
-        $outputDir = $this->pluginInfo->getWriteDir() . '/Staging/' . str_replace(' ', '_', $event->getName()) . '/';
+        $outputDir = $this->getOutputDir($event);
         $tmpDir = $outputDir . 'tmp/';      // temporary directory where we'll put anything we need temporarily.
 
         // Delete the content of the output directory if it exists
@@ -130,19 +125,9 @@ class StagingApp
 
                 $racePlateCsvFile = $outputDir . self::RACE_PLATE_DATA_CSV;
                 $this->generateRacePlateDataCsv($riderByName, $extraPlateSet, $racePlateCsvFile);
-                $result[] = new StagingLink(
-                    'Race Plate CSV',
-                    $this->replaceWPUploadDirWithUrl($wpUploadDir, $wpUploadUrl, $racePlateCsvFile),
-                    mime_content_type($racePlateCsvFile)
-                    );
 
                 $teamEnvelopeCsvFile = $outputDir . self::TEAM_ENVELOPE_DATA_CSV;
                 $this->generateTeamEnvelopeDataCsv($riderByName, $teamEnvelopeCsvFile);
-                $result[] = new StagingLink(
-                    'Team Envelopes CSV',
-                    $this->replaceWPUploadDirWithUrl($wpUploadDir, $wpUploadUrl, $teamEnvelopeCsvFile),
-                    mime_content_type($teamEnvelopeCsvFile)
-                    );
             }
 
             if (!$categoryMap->isEmpty()) {
@@ -150,35 +135,15 @@ class StagingApp
 
                 $stagingSheetsPdfFile = $outputDir . self::STAGING_SHEETS_PDF;
                 $this->generateStagingSheetsPdf($event, $tmpDir, $stagingSheetsPdfFile);
-                $result[] = new StagingLink(
-                    'Staging Sheets PDF',
-                    $this->replaceWPUploadDirWithUrl($wpUploadDir, $wpUploadUrl, $stagingSheetsPdfFile),
-                    mime_content_type($stagingSheetsPdfFile)
-                    );
 
                 $teamStagingPdfFile = $outputDir . self::TEAM_STAGING_PDF;
                 $this->generateTeamStagingPdf($event, $riderByTeamAndRace, $tmpDir, $teamStagingPdfFile);
-                $result[] = new StagingLink(
-                    'Team Staging PDF',
-                    $this->replaceWPUploadDirWithUrl($wpUploadDir, $wpUploadUrl, $teamStagingPdfFile),
-                    mime_content_type($teamStagingPdfFile)
-                    );
 
                 $stagingSummaryPdfFile = $outputDir . self::STAGING_SUMMARY_PDF;
                 $this->generateStagingSummaryPdf($event, $tmpDir, $stagingSummaryPdfFile);
-                $result[] = new StagingLink(
-                    'Staging Summary PDF',
-                    $this->replaceWPUploadDirWithUrl($wpUploadDir, $wpUploadUrl, $stagingSummaryPdfFile),
-                    mime_content_type($stagingSummaryPdfFile)
-                    );
 
                 $timingSystemImportCsvFile = $outputDir . self::TIMING_SYSTEM_IMPORT_CSV;
                 $this->generateTimingSystemImportCsv($riderByName, $timingSystemImportCsvFile);
-                $result[] = new StagingLink(
-                    'Timing System Import CSV',
-                    $this->replaceWPUploadDirWithUrl($wpUploadDir, $wpUploadUrl, $timingSystemImportCsvFile),
-                    mime_content_type($timingSystemImportCsvFile)
-                    );
 
                 $ridersByNameXmlFile = $tmpDir . self::RIDERS_BY_NAME_XML;
                 $stagingOrderByNamePdfFile = $outputDir . self::STAGING_ORDER_BY_NAME_PDF;
@@ -188,11 +153,6 @@ class StagingApp
                     $ridersByNameXmlFile,
                     $stagingOrderByNamePdfFile,
                     "Lastname/Firstname"
-                    );
-                $result[] = new StagingLink(
-                    'Riders By Name PDF',
-                    $this->replaceWPUploadDirWithUrl($wpUploadDir, $wpUploadUrl, $stagingOrderByNamePdfFile),
-                    mime_content_type($stagingOrderByNamePdfFile)
                     );
 
                 $ridersByCategoryXmlFile = $tmpDir . self::RIDERS_BY_CATEGORY_XML;
@@ -204,15 +164,91 @@ class StagingApp
                     $stagingOderByCategoryPdfFile,
                     "Category"
                     );
-                $result[] = new StagingLink(
-                    'Riders By Category PDF',
-                    $this->replaceWPUploadDirWithUrl($wpUploadDir, $wpUploadUrl, $stagingOderByCategoryPdfFile),
-                    mime_content_type($stagingOderByCategoryPdfFile)
-                    );
+            }
+        }
+
+        return $this->getStagingLinks($event);
+    }
+
+    /**
+     *
+     * @return StagingLink[]
+     */
+    public function getStagingLinks(Event $event): array
+    {
+        $result = [];
+        $wpUploadDir = wp_upload_dir()['basedir'];
+        $wpUploadUrl = wp_upload_dir()['baseurl'];
+        $outputDir = $this->getOutputDir($event);
+
+        $outputFiles = [
+            self::RACE_PLATE_DATA_CSV,
+            self::TEAM_ENVELOPE_DATA_CSV,
+            self::STAGING_SHEETS_PDF,
+            self::TEAM_STAGING_PDF,
+            self::STAGING_SUMMARY_PDF,
+            self::TIMING_SYSTEM_IMPORT_CSV,
+            self::STAGING_ORDER_BY_NAME_PDF,
+            self::STAGING_ORDER_BY_CATEGORY_PDF
+        ];
+
+        foreach ($outputFiles as $outputFile) {
+            $filePath = $outputDir . $outputFile;
+
+            if (file_exists($filePath)) {
+                switch ($outputFile) {
+                    case self::RACE_PLATE_DATA_CSV:
+                        $linkTitle ='Race Plate CSV';
+                        break;
+
+                    case self::TEAM_ENVELOPE_DATA_CSV:
+                        $linkTitle = 'Team Envelopes CSV';
+                        break;
+
+                    case self::STAGING_SHEETS_PDF:
+                        $linkTitle = 'Staging Sheets PDF';
+                        break;
+
+                    case self::TEAM_STAGING_PDF:
+                        $linkTitle = 'Team Staging PDF';
+                        break;
+
+                    case self::STAGING_SUMMARY_PDF:
+                        $linkTitle = 'Staging Summary PDF';
+                        break;
+
+                    case self::TIMING_SYSTEM_IMPORT_CSV:
+                        $linkTitle = 'Timing System Import CSV';
+                        break;
+
+                    case self::STAGING_ORDER_BY_NAME_PDF:
+                        $linkTitle = 'Riders By Name PDF';
+                        break;
+
+                    case self::STAGING_ORDER_BY_CATEGORY_PDF:
+                        $linkTitle = 'Riders By Category PDF';
+                        break;
+
+                    default:
+                        break;
+                }
+
+                if (isset($linkTitle)) {
+                    $result[] = new StagingLink(
+                        $linkTitle,
+                        $this->replaceWPUploadDirWithUrl($wpUploadDir, $wpUploadUrl, $filePath),
+                        mime_content_type($filePath)
+                        );
+                }
             }
         }
 
         return $result;
+    }
+
+    private function getOutputDir(Event $event): string
+    {
+        return $this->pluginInfo->getWriteDir() . '/Staging/' . str_replace(' ', '_', $event->getName()) . '/';
     }
 
     private function initializeTeamSizeMap(RegisteredRiderMap $regRiderMap, int $divisionCnt): TeamSizeMap
@@ -311,6 +347,12 @@ class StagingApp
         foreach ($teamEnvelopeMap->getEntries() as $teamRcd) {
             $values = TeamEnvelopeRcd::getColumnValues($teamRcd);
             $writer->insertOne($values);
+
+            // If there are more than 40 riders on a team, write a second
+            // copy of the record
+            if ($teamRcd->riderCount > 40) {
+                $writer->insertOne($values);
+            }
         }
     }
 

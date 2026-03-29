@@ -13,6 +13,7 @@ use WSCL\Main\RaceResult\RaceResultClient;
 class StagingController extends StagingRestController
 {
     private const STAGING_ROUTE = '';
+    private const REPORTS_ROUTE = 'reports/(?P<eventId>[\d]+)';
 
     private const PARAM_EVENT_ID = 'eventId';
     private const PARAM_REGISTRATION_FILE = 'regFile';
@@ -39,6 +40,7 @@ class StagingController extends StagingRestController
         parent::initializeInstance();
 
         $this->addEndpoint(self::STAGING_ROUTE, $this, 'runStaging', 'POST');
+        $this->addEndpoint(self::REPORTS_ROUTE, $this, 'fetchStagingResults', 'GET');
     }
 
     public function getItemRoute(): string
@@ -100,7 +102,59 @@ class StagingController extends StagingRestController
         return rest_ensure_response($result);
     }
 
-    private function validateEventParam(?string $eventId): void
+    /**
+     * REST endpoint handler to fetching the staging reports.
+     *
+     * @param \WP_REST_Request $request The REST request.
+     *
+     * @return \WP_REST_Response|\WP_Error
+     */
+    public function fetchStagingResults(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
+    {
+        $result = false;
+
+        $logger = new InMemoryLogger();
+
+        try {
+            $eventId = $request['eventId'];
+
+            $this->validateEventParam($eventId);
+
+            $stagingApp = new StagingApp($this->pluginInfo, $this->options, $this->rrClient, $logger, $this->bgProcess);
+
+            $outputFiles = $stagingApp->getStagingLinks(
+                $this->fetchEvent(intval($eventId)),
+                );
+
+            $logMsgs = $logger->getLogMsgs();
+
+            if (empty($logMsgs)) {
+                $result = new \WP_REST_Response($outputFiles);
+            } else {
+                throw new \DomainException('Errors processing staging.', 400);
+            }
+
+            // Dispatch any background tasks that were added
+            $this->bgProcess->save();
+            $this->bgProcess->dispatch();
+        } catch (\DomainException $de) {
+            $result = new \WP_Error(
+                self::DATA_ERROR,
+                'Invalid data: ' . $de->getMessage(),
+                array ('status' => $de->getCode(), 'logMsgs' => $logger->getLogMsgs())
+                );
+        } catch (\InvalidArgumentException $iae) {
+            $result = new \WP_Error(
+                self::PARAMETER_ERROR,
+                'Invalid argument: ' . $iae->getMessage(),
+                array ('status' => $iae->getCode(), 'logMsgs' => $logger->getLogMsgs())
+                );
+        }
+
+        return rest_ensure_response($result);
+    }
+
+    private function validateEventParam(string|int|null $eventId): void
     {
         if (is_null($eventId)) {
             throw new \InvalidArgumentException('Missing eventId parameter', 400);
