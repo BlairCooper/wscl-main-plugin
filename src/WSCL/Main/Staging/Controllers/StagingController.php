@@ -13,7 +13,7 @@ use WSCL\Main\RaceResult\RaceResultClient;
 class StagingController extends StagingRestController
 {
     private const STAGING_ROUTE = '';
-    private const REPORTS_ROUTE = 'reports/(?P<eventId>[\d]+)';
+    private const REPORTS_ROUTE = 'links/(?P<eventId>[\d]+)';
 
     private const PARAM_EVENT_ID = 'eventId';
     private const PARAM_REGISTRATION_FILE = 'regFile';
