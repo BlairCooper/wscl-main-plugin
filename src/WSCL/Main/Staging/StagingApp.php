@@ -131,6 +131,9 @@ class StagingApp
 
                 $teamEnvelopeCsvFile = $outputDir . self::TEAM_ENVELOPE_DATA_CSV;
                 $this->generateTeamEnvelopeDataCsv($riderByName, $teamEnvelopeCsvFile);
+
+                $divisionListPdfFile = $outputDir . self::DIVISION_LIST_PDF;
+                $this->generateDivisionListPdf($teamSizeMap, $tmpDir, $divisionListPdfFile);
             }
 
             if (!$categoryMap->isEmpty()) {
@@ -167,9 +170,6 @@ class StagingApp
                     $stagingOderByCategoryPdfFile,
                     "Category"
                     );
-
-                $divisionListPdfFile = $outputDir . self::DIVISION_LIST_PDF;
-                $this->generateDivisionListPdf($teamSizeMap, $tmpDir, $divisionListPdfFile);
             }
         }
 
@@ -789,6 +789,8 @@ class StagingApp
 
     private function generateDivisionListXML(TeamSizeMap $teamSizeMap, string $xmlFile): void
     {
+        $counts = [];
+
         $writer = new \XMLWriter();
         if ($writer->openUri($xmlFile)) {
             $writer->startDocument('1.0', 'utf-8');
@@ -820,6 +822,9 @@ class StagingApp
                 $divisions = array_keys($levelDivisionList);
 
                 foreach ($divisions as $division) {
+                    $minSize = 1000;
+                    $maxSize = 0;
+
                     $writer->startElement('Division');
                     $writer->writeAttribute('name', $division);
 
@@ -827,16 +832,54 @@ class StagingApp
                     sort($teamList);
 
                     foreach ($teamList as $team) {
-                        $writer->writeElement('Team', $team);
+                        $teamSizeEntry = $teamSizeMap->get($team);
+                        $teamSize = $isHighSchool ?
+                                        $teamSizeEntry->getHighSchoolSize() :
+                                        $teamSizeEntry->getMiddleSchoolSize();
+
+                        if ($teamSize > 0) {
+                            $minSize = min($minSize, $teamSize);
+                            $maxSize = max($maxSize, $teamSize);
+
+                            $writer->startElement('Team');
+                            $writer->writeAttribute('name', $team);
+                            $writer->writeAttribute('size', strval($teamSize));
+                            $writer->endElement();  // Team
+                        }
                     }
 
                     $writer->endElement();  // Division
+
+                    $counts[$level][$division]['min'] = $minSize;
+                    $counts[$level][$division]['max'] = $maxSize;
                 }
 
                 $writer->endElement();  // Level
             }
 
             $writer->endElement();      // Divisions
+
+            $writer->startElement('Stats');
+
+            foreach($counts as $levelName => $levelEntries) {
+                $writer->startElement('LevelStats');
+                $writer->writeAttribute('name', $levelName);
+
+                foreach ($levelEntries as $divisionName => $divisionEntries) {
+                    $writer->startElement('DivisionStats');
+                    $writer->writeAttribute('name', $divisionName);
+
+                    foreach ($divisionEntries as $minMax => $size) {
+                        $writer->writeAttribute($minMax, strval($size));
+                    }
+
+                    $writer->endElement();  // DivisionStats
+                }
+
+                $writer->endElement();  // LevelStats
+            }
+
+            $writer->endElement();      // Stats
 
             $writer->endElement();      // DivisionList
 

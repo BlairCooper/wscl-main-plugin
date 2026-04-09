@@ -16,15 +16,17 @@ class TeamSizeMap
     /** @var array<string, string[]> A map of division suffix to teams in that division */
     private array $middleSchoolDivisions;
 
-    /** Number of divisions within HS/MS */
-    private int $divisionCnt = 1;
-
     /** @var TeamSizeEntry[] */
     private array $teamMap = array();
 
-    public function __construct(int $divisionCnt)
+    /**
+     *
+     * @param int $divisionCnt  Number of divisions within HS/MS
+     */
+    public function __construct(
+        private int $divisionCnt = 1
+        )
     {
-        $this->divisionCnt = $divisionCnt;
     }
 
     public function addRider(string $team, RegistrationRcd $regRcd): void
@@ -62,37 +64,79 @@ class TeamSizeMap
         // Get a mapping of team to rider count
         $sizes = array_map(fn($entry): int => $entry->$mapFunc(), $sizeArray);
         // Filter out the teams with only 1 rider or the 'team' is independent riders
-        $sizes = array_filter($sizes, fn($v, $k) => 1 != $v || 'Independent' != $k, ARRAY_FILTER_USE_BOTH);
+        $sizes = array_filter($sizes, fn($v, $k) => $v > 1 && 'Independent' != $k, ARRAY_FILTER_USE_BOTH);
         // Sort into size order, maintaining team name key
         asort($sizes);
-        // Divide into chunks based on the number of divisions
-        $chunks = array_chunk(
-            $sizes,
-            $this->determineChunkSize(count($sizes), $this->divisionCnt),
-            true
-            );
+
+        $sizeGrouping = $this->groupByTeamSize($sizes);
+        $divisionSize = $this->determineDivisionSize(count($sizes), $this->divisionCnt);
+
+        $chunkNdx = 0;
+        $chunks = [
+            $chunkNdx => []
+        ];
+
+        while (!empty($sizeGrouping)) {
+            $group = array_shift($sizeGrouping);
+
+            // If there isn't room in the current chunk for the next group,
+            //  add a new chunk
+            if (count($chunks[$chunkNdx]) + count($group) > $divisionSize &&
+                $chunkNdx < ($this->divisionCnt - 1)
+                )
+            {
+                $chunkNdx++;
+                $chunks[$chunkNdx] = [];
+            }
+
+            $chunks[$chunkNdx] += $group;
+        }
+
         // Convert each chunk into a list of teams
         $teamChunks = array_map(fn($entry): array => array_keys($entry), $chunks);
-        // Invert the list so the larger teams come first
-        $teamChunks = array_reverse($teamChunks);
 
         return $this->relabelChunks($teamChunks);
     }
 
     /**
-     * Determine what size each division should be.
+     * Determine what size each division should be. In the event that there
+     * are an odd number of teams, the larger size is returned.
      *
      * @param int $teamCnt
      * @param int $divisionCnt
      *
      * @return int
      */
-    private function determineChunkSize(int $teamCnt, int $divisionCnt): int
+    private function determineDivisionSize(int $teamCnt, int $divisionCnt): int
     {
         $remainder = $teamCnt % $divisionCnt;
         $numerator = $teamCnt / $divisionCnt;
 
-        return 0 == $remainder ? $numerator : ceil($numerator);
+        return 0 == $remainder ? $numerator : intval(ceil($numerator));
+    }
+
+    /**
+     * Generates an array where the index is a team size and the values are
+     * an array of teams that are that size. Each if these entries are
+     * keyed by the team name and the value is the team size.
+     *
+     * @param array<string, int> $input An array of team names to team sizes.
+     *
+     * @return array<int, array<string, int>> An array of teams grouped by
+     *      their size, largest to smallest.
+     */
+    private function groupByTeamSize(array $input): array
+    {
+        // 1. Group by value
+        $groups = [];
+        foreach ($input as $team => $value) {
+            $groups[$value][$team] = $value;
+        }
+
+        // 2. Sort values descending (largest first)
+        krsort($groups);
+
+        return $groups;
     }
 
     /**

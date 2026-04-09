@@ -43,11 +43,11 @@
 					margin-left="15mm"
 					margin-right="15mm" >
 					<fo:region-body
-						margin-top="10mm"
+						margin-top="20mm"
 						margin-bottom="10mm"
 						column-count="2"
 						column-gap="8mm" />
-					<fo:region-before extent="12mm" />
+					<fo:region-before extent="20mm" />
 					<fo:region-after extent="5mm" />
 				</fo:simple-page-master>
 			</fo:layout-master-set>
@@ -85,16 +85,21 @@
 
 	<xsl:template match="ReportHeader">
 		<fo:block>
-			<fo:table table-layout="fixed" width="50mm" xsl:use-attribute-sets="base">
+			<fo:table table-layout="fixed" width="100%" xsl:use-attribute-sets="base">
 				<fo:table-column column-width="30mm" />
-				<fo:table-column column-width="250mm" />
+				<fo:table-column column-width="180mm" />
 				<fo:table-body>
 					<fo:table-row>
 						<fo:table-cell>
-							<fo:block>
+							<fo:block font-size="12pt">
 								Divisions
 							</fo:block>
 						</fo:table-cell>
+                        <fo:table-cell>
+                            <fo:block>
+                                <xsl:apply-templates select="/DivisionList/Stats" />
+                            </fo:block>
+                        </fo:table-cell>
 					</fo:table-row>
 				</fo:table-body>
 			</fo:table>
@@ -197,10 +202,41 @@
 			</fo:table-cell>
 			<fo:table-cell xsl:use-attribute-sets="fieldBox">
 				<fo:block>
-					<xsl:value-of select="." />
+					<xsl:value-of select="@name" /> (<xsl:value-of select="@size" />)
 				</fo:block>
 			</fo:table-cell>
 		</fo:table-row>
 	</xsl:template>
+
+    <xsl:template match="Stats" >
+        <fo:table table-layout="fixed" width="100%">
+            <fo:table-column column-width="25mm" />
+            <fo:table-column column-width="50mm" />
+        
+            <fo:table-body>
+                <!-- Levels -->
+                <xsl:apply-templates />
+            </fo:table-body>
+        </fo:table>
+    </xsl:template>
+
+    <xsl:template match="LevelStats">
+        <fo:table-row>
+            <fo:table-cell xsl:use-attribute-sets="fieldBox">
+                <fo:block>
+                    <xsl:value-of select="@name" />
+                </fo:block>
+            </fo:table-cell>
+            <fo:table-cell xsl:use-attribute-sets="fieldBox">
+                <xsl:apply-templates />
+            </fo:table-cell>
+        </fo:table-row>
+    </xsl:template>
+
+    <xsl:template match="DivisionStats">
+        <fo:block>
+            <xsl:value-of select="@name" />: <xsl:value-of select="@min" /> to <xsl:value-of select="@max" /> riders
+       </fo:block>
+    </xsl:template>
 
 </xsl:stylesheet>
