@@ -463,7 +463,7 @@ class StagingApp
 
                 foreach ($teamEntry->getRaces() as $teamRace) {
                     $writer->startElement('Race');
-                    $writer->writeAttribute('time', $teamRace->getStartTime());
+                    $writer->writeAttribute('time', $teamRace->getStartTime()->format('g:i A'));
 
                     foreach ($teamRace->getRiders() as $rider) {
                         $writer->startElement('Rider');

@@ -6,20 +6,20 @@ use WSCL\Main\Staging\Entity\Rider;
 
 class RaceRiderMap
 {
-    private string $raceTime;
     private RiderByFirstLastNameSet $riderSet;
 
-    public function __construct(string $raceTime)
+    public function __construct(
+        private \DateTime $raceTime
+        )
     {
-        $this->raceTime = $raceTime;
         $this->riderSet = new RiderByFirstLastNameSet();
     }
 
     /**
      *
-     * @return string
+     * @return \DateTime
      */
-    public function getStartTime(): string
+    public function getStartTime(): \DateTime
     {
         return $this->raceTime;
     }

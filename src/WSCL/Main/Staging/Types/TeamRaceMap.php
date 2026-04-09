@@ -27,16 +27,18 @@ class TeamRaceMap
 
     /**
      *
-     * @param string $raceTime
+     * @param \DateTime $raceTime
      * @param Rider $rider
      */
-    public function addRider(string $raceTime, Rider $rider): void
+    public function addRider(\DateTime $raceTime, Rider $rider): void
     {
-        if (!array_key_exists($raceTime, $this->raceTimeMap)) {
-            $this->raceTimeMap[$raceTime] = new RaceRiderMap($raceTime);
+        $mapKey = $raceTime->format('c');
+
+        if (!array_key_exists($mapKey, $this->raceTimeMap)) {
+            $this->raceTimeMap[$mapKey] = new RaceRiderMap($raceTime);
         }
 
-        $this->raceTimeMap[$raceTime]->addRider($rider);
+        $this->raceTimeMap[$mapKey]->addRider($rider);
     }
 
     /**

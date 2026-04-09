@@ -20,7 +20,7 @@ class Race
 
     public function getId(): ?int
     {
-        return $this->id ?? null;
+        return -1 == $this->id ? null : $this->id;
     }
 
     public function setId(int $id): void

@@ -7,8 +7,6 @@ use WSCL\Main\Staging\Models\Event;
 
 class RiderByTeamAndRaceMap
 {
-    private const RACE_TIME_FORMAT = 'h:i A';
-
     private Event $event;
 
     /** @var TeamRaceMap[] */
@@ -51,7 +49,7 @@ class RiderByTeamAndRaceMap
         return $this->teamMap;
     }
 
-    private function getRiderRaceTime(Rider $rider, Event $event): string
+    private function getRiderRaceTime(Rider $rider, Event $event): \DateTime
     {
         $raceTime = '';
 
@@ -60,7 +58,7 @@ class RiderByTeamAndRaceMap
         if (isset($category)) {
             foreach ($event->getRaces() as $race) {
                 if ($race->hasCategory($category->id)) {
-                    $raceTime = $race->getStartTime()->format(self::RACE_TIME_FORMAT);
+                    $raceTime = $race->getStartTime();
                     break;
                 }
             }
