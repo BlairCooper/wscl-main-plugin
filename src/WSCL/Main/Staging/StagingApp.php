@@ -39,11 +39,13 @@ class StagingApp
     private const STAGING_SHEETS_XML = "StagingSheets.xml";
     private const STAGING_SUMMARY_XML = "StagingSummary.xml";
     private const TEAM_STAGING_XML = "TeamStaging.xml";
+    private const DIVISION_LIST_XML = "DivisionList.xml";
 
     private const STAGING_ORDER_XSLT = "StagingOrder.xslt";
     private const STAGING_SHEETS_XSLT = "StagingSheets.xslt";
     private const STAGING_SUMMARY_XSLT = "StagingSummary.xslt";
     private const TEAM_STAGING_XSLT = "TeamStaging.xslt";
+    private const DIVISION_LIST_XSLT = "DivisionList.xslt";
     private const COMMON_XSLT = "Common.xslt";
     private const LOGO_PNG = "WSCL_Logo.png";
 
@@ -52,6 +54,7 @@ class StagingApp
     private const STAGING_SHEETS_PDF = "StagingSheets.pdf";
     private const STAGING_SUMMARY_PDF = "StagingSummary.pdf";
     private const TEAM_STAGING_PDF = "TeamStaging.pdf";
+    private const DIVISION_LIST_PDF = "DivisionsList.pdf";
 
     private const TIMING_SYSTEM_IMPORT_CSV = "TimingSystemImport.csv";
     private const RACE_PLATE_DATA_CSV = "RacePlatesDatabase.csv";
@@ -164,6 +167,9 @@ class StagingApp
                     $stagingOderByCategoryPdfFile,
                     "Category"
                     );
+
+                $divisionListPdfFile = $outputDir . self::DIVISION_LIST_PDF;
+                $this->generateDivisionListPdf($teamSizeMap, $tmpDir, $divisionListPdfFile);
             }
         }
 
@@ -189,7 +195,8 @@ class StagingApp
             self::STAGING_SUMMARY_PDF,
             self::TIMING_SYSTEM_IMPORT_CSV,
             self::STAGING_ORDER_BY_NAME_PDF,
-            self::STAGING_ORDER_BY_CATEGORY_PDF
+            self::STAGING_ORDER_BY_CATEGORY_PDF,
+            self::DIVISION_LIST_PDF
         ];
 
         foreach ($outputFiles as $outputFile) {
@@ -227,6 +234,10 @@ class StagingApp
 
                     case self::STAGING_ORDER_BY_CATEGORY_PDF:
                         $linkTitle = 'Riders By Category PDF';
+                        break;
+
+                    case self::DIVISION_LIST_PDF:
+                        $linkTitle = "Division List";
                         break;
 
                     default:
@@ -763,6 +774,72 @@ class StagingApp
             $writer->endElement();      // Riders
 
             $writer->endElement();      // RidersByName
+            $writer->endDocument();
+        }
+    }
+
+    private function generateDivisionListPdf(TeamSizeMap $teamSizeMap, string $xmlDir, string $pdfFile): void
+    {
+        $xmlFile = $xmlDir . self::DIVISION_LIST_XML;
+
+        $this->generateDivisionListXML($teamSizeMap, $xmlFile);
+
+        $this->generatePDF($xmlFile, self::DIVISION_LIST_XSLT, $pdfFile);
+    }
+
+    private function generateDivisionListXML(TeamSizeMap $teamSizeMap, string $xmlFile): void
+    {
+        $writer = new \XMLWriter();
+        if ($writer->openUri($xmlFile)) {
+            $writer->startDocument('1.0', 'utf-8');
+            $writer->startElement('DivisionList');
+
+            $writer->writeElement('Timestamp', $this->runTimestampStr);
+
+            $writer->startElement('ReportHeader');
+
+//             $writer->writeElement('EventName', $event->getName());
+//             $writer->writeElement('EventDate', $event->getRaceDateAsString());
+
+            $writer->endElement();      // Report Header
+
+            $writer->startElement('Divisions');
+
+            $hsMsList = [
+                'High School' => true,
+                'Middle School' => false
+            ];
+
+            foreach ($hsMsList as $level => $isHighSchool) {
+                $writer->startElement('Level');
+                $writer->writeAttribute('name', $level);
+
+                $levelDivisionList = $teamSizeMap->getSchoolDivisionList($isHighSchool);
+                ksort($levelDivisionList);
+
+                $divisions = array_keys($levelDivisionList);
+
+                foreach ($divisions as $division) {
+                    $writer->startElement('Division');
+                    $writer->writeAttribute('name', $division);
+
+                    $teamList = $levelDivisionList[$division];
+                    sort($teamList);
+
+                    foreach ($teamList as $team) {
+                        $writer->writeElement('Team', $team);
+                    }
+
+                    $writer->endElement();  // Division
+                }
+
+                $writer->endElement();  // Level
+            }
+
+            $writer->endElement();      // Divisions
+
+            $writer->endElement();      // DivisionList
+
             $writer->endDocument();
         }
     }

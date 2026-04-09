@@ -135,4 +135,13 @@ class TeamSizeMap
 
         return $result;
     }
+
+    /**
+     *
+     * @return array<string, string[]> A map of division suffix to teams in that division
+     */
+    public function getSchoolDivisionList(bool $forHighSchool): array
+    {
+        return $forHighSchool ? $this->highSchoolDivisions : $this->middleSchoolDivisions;
+    }
 }
