@@ -19,6 +19,7 @@ use WSCL\Main\Staging\Models\Race;
 use WSCL\Main\Staging\Models\StagingLink;
 use WSCL\Main\Staging\Types\CategoryMap;
 use WSCL\Main\Staging\Types\RegisteredRiderMap;
+use WSCL\Main\Staging\Types\RiderByBibSet;
 use WSCL\Main\Staging\Types\RiderByCategorySet;
 use WSCL\Main\Staging\Types\RiderByLastFirstNameSet;
 use WSCL\Main\Staging\Types\RiderByPlateSet;
@@ -51,6 +52,7 @@ class StagingApp
 
     private const STAGING_ORDER_BY_NAME_PDF = "StagingOrderByName.pdf";
     private const STAGING_ORDER_BY_CATEGORY_PDF = "StagingOrderByCategory.pdf";
+    private const STAGING_ORDER_BY_BIB_PDF = "StagingOrderByBib.pdf";
     private const STAGING_SHEETS_PDF = "StagingSheets.pdf";
     private const STAGING_SUMMARY_PDF = "StagingSummary.pdf";
     private const TEAM_STAGING_PDF = "TeamStaging.pdf";
@@ -108,14 +110,18 @@ class StagingApp
             $categoryMap = new CategoryMap();
             $riderByCategory = new RiderByCategorySet();
             $riderByName = new RiderByLastFirstNameSet();
+            $riderByBib = new RiderByBibSet();
             $riderByTeamAndRace = new RiderByTeamAndRaceMap($event);
 
             $this->initializeRiders(
                 $regLoader->getRiderMap(),
                 $timingLoader->getRiderMap(),
                 $categoryMap,
-                $riderByCategory,
-                $riderByName,
+                [
+                    $riderByCategory,
+                    $riderByName,
+                    $riderByBib
+                ],
                 $riderByTeamAndRace,
                 $teamSizeMap
                 );
@@ -126,49 +132,73 @@ class StagingApp
                 $this->addRoverPlates($extraPlateSet);
                 $this->addReplacementPlates($extraPlateSet);
 
-                $racePlateCsvFile = $outputDir . self::RACE_PLATE_DATA_CSV;
-                $this->generateRacePlateDataCsv($riderByName, $extraPlateSet, $racePlateCsvFile);
+                $this->generateRacePlateDataCsv(
+                    $riderByName,
+                    $extraPlateSet,
+                    $outputDir . self::RACE_PLATE_DATA_CSV
+                    );
 
-                $teamEnvelopeCsvFile = $outputDir . self::TEAM_ENVELOPE_DATA_CSV;
-                $this->generateTeamEnvelopeDataCsv($riderByName, $teamEnvelopeCsvFile);
+                $this->generateTeamEnvelopeDataCsv(
+                    $riderByName,
+                    $outputDir . self::TEAM_ENVELOPE_DATA_CSV
+                    );
 
-                $divisionListPdfFile = $outputDir . self::DIVISION_LIST_PDF;
-                $this->generateDivisionListPdf($teamSizeMap, $tmpDir, $divisionListPdfFile);
+                $this->generateDivisionListPdf(
+                    $teamSizeMap,
+                    $tmpDir,
+                    $outputDir . self::DIVISION_LIST_PDF
+                    );
             }
 
             if (!$categoryMap->isEmpty()) {
                 $this->initializeRows($event, $categoryMap);
 
-                $stagingSheetsPdfFile = $outputDir . self::STAGING_SHEETS_PDF;
-                $this->generateStagingSheetsPdf($event, $tmpDir, $stagingSheetsPdfFile);
+                $this->generateStagingSheetsPdf(
+                    $event,
+                    $tmpDir,
+                    $outputDir . self::STAGING_SHEETS_PDF
+                    );
 
-                $teamStagingPdfFile = $outputDir . self::TEAM_STAGING_PDF;
-                $this->generateTeamStagingPdf($event, $riderByTeamAndRace, $tmpDir, $teamStagingPdfFile);
+                $this->generateTeamStagingPdf(
+                    $event,
+                    $riderByTeamAndRace,
+                    $tmpDir,
+                    $outputDir . self::TEAM_STAGING_PDF
+                    );
 
-                $stagingSummaryPdfFile = $outputDir . self::STAGING_SUMMARY_PDF;
-                $this->generateStagingSummaryPdf($event, $tmpDir, $stagingSummaryPdfFile);
+                $this->generateStagingSummaryPdf(
+                    $event,
+                    $tmpDir,
+                    $outputDir . self::STAGING_SUMMARY_PDF
+                    );
 
-                $timingSystemImportCsvFile = $outputDir . self::TIMING_SYSTEM_IMPORT_CSV;
-                $this->generateTimingSystemImportCsv($riderByName, $timingSystemImportCsvFile);
+                $this->generateTimingSystemImportCsv(
+                    $riderByName,
+                    $outputDir . self::TIMING_SYSTEM_IMPORT_CSV
+                    );
 
-                $ridersByNameXmlFile = $tmpDir . self::RIDERS_BY_NAME_XML;
-                $stagingOrderByNamePdfFile = $outputDir . self::STAGING_ORDER_BY_NAME_PDF;
                 $this->generateStagingOrderPdf(
                     $event,
                     $riderByName,
-                    $ridersByNameXmlFile,
-                    $stagingOrderByNamePdfFile,
+                    $tmpDir . self::RIDERS_BY_NAME_XML,
+                    $outputDir . self::STAGING_ORDER_BY_NAME_PDF,
                     "Lastname/Firstname"
                     );
 
-                $ridersByCategoryXmlFile = $tmpDir . self::RIDERS_BY_CATEGORY_XML;
-                $stagingOderByCategoryPdfFile = $outputDir . self::STAGING_ORDER_BY_CATEGORY_PDF;
                 $this->generateStagingOrderPdf(
                     $event,
                     $riderByCategory,
-                    $ridersByCategoryXmlFile,
-                    $stagingOderByCategoryPdfFile,
+                    $tmpDir . self::RIDERS_BY_CATEGORY_XML,
+                    $outputDir . self::STAGING_ORDER_BY_CATEGORY_PDF,
                     "Category"
+                    );
+
+                $this->generateStagingOrderPdf(
+                    $event,
+                    $riderByBib,
+                    $tmpDir . self::RIDERS_BY_CATEGORY_XML,
+                    $outputDir . self::STAGING_ORDER_BY_BIB_PDF,
+                    "Bib"
                     );
             }
         }
@@ -196,6 +226,7 @@ class StagingApp
             self::TIMING_SYSTEM_IMPORT_CSV,
             self::STAGING_ORDER_BY_NAME_PDF,
             self::STAGING_ORDER_BY_CATEGORY_PDF,
+            self::STAGING_ORDER_BY_BIB_PDF,
             self::DIVISION_LIST_PDF
         ];
 
@@ -281,8 +312,7 @@ class StagingApp
      * @param RegisteredRiderMap $regRiderMap
      * @param TimingRiderMap $timingRiderMap
      * @param CategoryMap $categoryMap
-     * @param RiderByCategorySet $riderByCategory
-     * @param RiderByLastFirstNameSet $riderByName
+     * @param RiderBySet[] $riderBySets
      * @param RiderByTeamAndRaceMap $riderByTeamAndRace
      * @param TeamSizeMap $teamSizeMap
      */
@@ -290,8 +320,7 @@ class StagingApp
         RegisteredRiderMap $regRiderMap,
         TimingRiderMap $timingRiderMap,
         CategoryMap $categoryMap,
-        RiderByCategorySet $riderByCategory,
-        RiderByLastFirstNameSet $riderByName,
+        array $riderBySets,
         RiderByTeamAndRaceMap $riderByTeamAndRace,
         TeamSizeMap $teamSizeMap
         ): void
@@ -305,9 +334,11 @@ class StagingApp
                 $rider = new Rider($regRcd, $timingRcd, $teamSizeMap);
 
                 $categoryMap->addRider($regRcd->getCategory(), $rider);
-                $riderByCategory->add($rider);
-                $riderByName->add($rider);
                 $riderByTeamAndRace->add($rider);
+
+                foreach ($riderBySets as $set) {
+                    $set->add($rider);
+                }
             }
         }
     }

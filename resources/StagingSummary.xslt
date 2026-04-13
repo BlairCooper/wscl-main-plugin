@@ -73,7 +73,7 @@
 						margin-top="10mm"
 						margin-bottom="10mm"
 						column-count="2"
-						column-gap="8mm" />
+						column-gap="22mm" />
 					<fo:region-before extent="12mm" />
 					<fo:region-after extent="5mm" />
 				</fo:simple-page-master>
