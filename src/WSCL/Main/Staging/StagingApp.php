@@ -267,6 +267,10 @@ class StagingApp
                         $linkTitle = 'Riders By Category PDF';
                         break;
 
+                    case self::STAGING_ORDER_BY_BIB_PDF:
+                        $linkTitle = 'Riders By Bib PDF';
+                        break;
+
                     case self::DIVISION_LIST_PDF:
                         $linkTitle = "Division List";
                         break;

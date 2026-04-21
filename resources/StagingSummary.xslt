@@ -73,7 +73,7 @@
 						margin-top="10mm"
 						margin-bottom="10mm"
 						column-count="2"
-						column-gap="22mm" />
+						column-gap="30mm" />
 					<fo:region-before extent="12mm" />
 					<fo:region-after extent="5mm" />
 				</fo:simple-page-master>
@@ -145,7 +145,7 @@
 							<fo:table table-layout="fixed" width="50%" >
 								<fo:table-column column-width="25mm" />
 								<fo:table-column column-width="40mm" />
-								<fo:table-column column-width="14mm" />
+								<fo:table-column column-width="11mm" />
 
 								<fo:table-body>
 									<fo:table-row>
@@ -183,7 +183,7 @@
 							<fo:table table-layout="fixed" width="50%" >
 								<fo:table-column column-width="25mm" />
 								<fo:table-column column-width="40mm" />
-								<fo:table-column column-width="14mm" />
+								<fo:table-column column-width="11mm" />
 
 								<fo:table-body>
 									<fo:table-row>
@@ -246,8 +246,8 @@
 										<fo:table table-layout="fixed" width="100%">
 											<fo:table-column column-width="12mm" />
 											<fo:table-column column-width="40mm" />
-											<fo:table-column column-width="12mm" />
-											<fo:table-column column-width="15mm" />
+											<fo:table-column column-width="11mm" />
+											<fo:table-column column-width="13mm" />
 		
 											<fo:table-body>
 												<fo:table-row>
@@ -295,8 +295,8 @@
 			<fo:table table-layout="fixed" width="100%">
 				<fo:table-column column-width="12mm" />
 				<fo:table-column column-width="40mm" />
-				<fo:table-column column-width="12mm" />
-				<fo:table-column column-width="15mm" />
+				<fo:table-column column-width="11mm" />
+				<fo:table-column column-width="13mm" />
 	
 				<fo:table-header>
 					<fo:table-row>

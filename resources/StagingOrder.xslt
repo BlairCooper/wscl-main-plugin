@@ -10,12 +10,25 @@
 	<xsl:template match="/">
 		<fo:root>
 			<fo:layout-master-set>
-				<fo:simple-page-master margin-right="0.5in"
-					margin-left="0.5in" margin-bottom="0.2in" margin-top="0.2in"
-					page-width="8.5in" page-height="11in" master-name="portrait">
-					<fo:region-body margin-top="0.3in" margin-bottom="0.4in" />
-					<fo:region-before extent="0.3in" />
-					<fo:region-after extent="0.3in" />
+				<fo:simple-page-master
+                    master-name="portrait"
+                    page-width="8.5in"
+                    page-height="11in"
+                    margin-top="5mm"
+                    margin-bottom="5mm"
+                    margin-left="12mm"
+                    margin-right="11mm"
+                    >
+					<fo:region-body
+                        margin-top="8mm"
+                        margin-bottom="10mm"
+                        />
+					<fo:region-before
+                        extent="8mm"
+                        />
+					<fo:region-after
+                        extent="8mm"
+                        />
 				</fo:simple-page-master>
 			</fo:layout-master-set>
 
@@ -89,14 +102,14 @@
 
 	<xsl:template match="Riders">
 		<fo:block padding-before="2pt" border-collapse="collapse" font-size="6pt">
-			<fo:table table-layout="fixed" width="181mm"
+			<fo:table table-layout="fixed" width="190mm"
 				border-spacing="0pt">
 				<fo:table-column column-width="10mm" />
 				<fo:table-column column-width="20mm" />
-				<fo:table-column column-width="20mm" />
+				<fo:table-column column-width="30mm" />
 				<fo:table-column column-width="10mm" />
 				<fo:table-column column-width="10mm" />
-				<fo:table-column column-width="50mm" />
+				<fo:table-column column-width="45mm" />
 				<fo:table-column column-width="32mm" />
 				<fo:table-column column-width="10mm" />
 				<fo:table-column column-width="10mm" />
