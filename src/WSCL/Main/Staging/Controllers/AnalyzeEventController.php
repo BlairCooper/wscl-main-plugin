@@ -12,10 +12,16 @@ use WSCL\Main\RaceResult\Entity\RiderTimingData;
 use WSCL\Main\Staging\Models\StagingLink;
 use WSCL\Main\RaceResult\Entity\TeamScoringData;
 use WSCL\Main\WsclMainOptionsInterface;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use SplFileInfo;
 
 class AnalyzeEventController extends StagingRestController
 {
-    private const ROUTE = '/analyze/(?P<eventId>[\d]+)';
+    private const ROUTE = '/analyze';
+    private const EVENT_ROUTE = self::ROUTE . '/(?P<eventId>[\d]+)';
+    private const REPORTS_ROUTE = self::ROUTE . '/links';
 
     public function __construct(
         PluginInfoInterface $pluginInfo,
@@ -47,8 +53,9 @@ class AnalyzeEventController extends StagingRestController
     {
         parent::initializeInstance();
 
-        $this->addEndpoint(self::ROUTE.'/riders', $this, 'analyzeRiders', 'GET');
-        $this->addEndpoint(self::ROUTE.'/teamScoring', $this, 'analyzeTeamScoring', 'GET');
+        $this->addEndpoint(self::EVENT_ROUTE.'/riders', $this, 'analyzeRiders', 'GET');
+        $this->addEndpoint(self::EVENT_ROUTE.'/teamScoring', $this, 'analyzeTeamScoring', 'GET');
+        $this->addEndpoint(self::REPORTS_ROUTE.'/riders', $this, 'fetchRiderAnalysisResults', 'GET');
     }
 
     /**
@@ -180,4 +187,67 @@ class AnalyzeEventController extends StagingRestController
 
         return rest_ensure_response($result);
     }
+
+    /**
+     * REST endpoint handler to fetching the staging reports.
+     *
+     * @param \WP_REST_Request $request The REST request.
+     *
+     * @return \WP_REST_Response|\WP_Error
+     */
+    public function fetchRiderAnalysisResults(\WP_REST_Request $request): \WP_REST_Response|\WP_Error
+    {
+        $result = false;
+
+        $outputDir = sprintf('%sRiderAnalysis/', $this->pluginInfo->getWriteDir());
+
+        $outputFiles = $this->fetchRiderAnalysysFiles($outputDir);
+
+        $wpUploadDir = str_replace('\\', '/', wp_upload_dir()['basedir']);
+        $wpUploadUrl = wp_upload_dir()['baseurl'];
+
+        $links = [];
+
+        foreach($outputFiles as $fileName => $pdfFile) {
+            $links[] = new StagingLink(
+                $fileName,
+                str_replace(
+                    $wpUploadDir,
+                    $wpUploadUrl,
+                    $pdfFile
+                    ),
+                mime_content_type($pdfFile)
+                );
+        }
+
+        $result = new \WP_REST_Response($links);
+
+        return rest_ensure_response($result);
+    }
+
+    /**
+     *
+     * @param string $path Source path of the analysis files
+     *
+     * @return array<string, string> An array of event names to analysis files
+     */
+    private function fetchRiderAnalysysFiles(string $path): array
+    {
+        $logFiles = [];
+
+        $dirItor = new RecursiveDirectoryIterator($path, FilesystemIterator::KEY_AS_FILENAME | FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::SKIP_DOTS);
+        $itor = new RecursiveIteratorIterator($dirItor);
+
+        /** @var SplFileInfo $fileInfo  */
+        foreach ($itor as $fileInfo) {
+            $matches = [];
+
+            if (preg_match('/^RiderAnalysis-(\d{6})-WSCL ((\d{4}) (.*))\.pdf$/', $fileInfo->getFilename(), $matches)) {
+                $logFiles[$matches[2]] = str_replace('\\', '/', $fileInfo->getRealPath());
+            }
+        }
+
+        return $logFiles;
+    }
+
 }
