@@ -59,8 +59,8 @@ class RiderTimingData extends JsonEntity
             new FieldPropertyEntry('fnTimeOrStatus', 'raceTime'),
             new FieldPropertyEntry('Finish.Decimal', 'raceTimeSeconds'),
             new FieldPropertyEntry('AverageLap.Decimal', 'averageLapSeconds'),
-            // Result ID 14, Finish Time; Rank ID 1, OverallRank
-            new FieldPropertyEntry('GapTimeTop(14;1;"";"sssss.kkk")', 'gapToFirst'),
+            // Result ID 15, FinalTime; Rank ID 1, OverallRank
+            new FieldPropertyEntry('GapTimeTop(15;1;"";"sssss.kkk")', 'gapToFirst'),
         );
 
         return $fields;
