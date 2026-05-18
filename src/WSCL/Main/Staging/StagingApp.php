@@ -35,6 +35,7 @@ use WSCL\Main\RaceResult\RaceResultClient;
 
 class StagingApp
 {
+    private const RIDERS_BY_BIB_XML = "RidersByBib.xml";
     private const RIDERS_BY_NAME_XML = "RidersByName.xml";
     private const RIDERS_BY_CATEGORY_XML = "RidersByCategory.xml";
     private const STAGING_SHEETS_XML = "StagingSheets.xml";
@@ -196,7 +197,7 @@ class StagingApp
                 $this->generateStagingOrderPdf(
                     $event,
                     $riderByBib,
-                    $tmpDir . self::RIDERS_BY_CATEGORY_XML,
+                    $tmpDir . self::RIDERS_BY_BIB_XML,
                     $outputDir . self::STAGING_ORDER_BY_BIB_PDF,
                     "Bib"
                     );
