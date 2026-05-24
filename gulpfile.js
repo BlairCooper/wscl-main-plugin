@@ -80,7 +80,7 @@ function updateEntryPointVersion() {
         ;
 }
 
-function runComposerTask() {
+function runComposerTask(cb) {
     return exec('composer update --no-dev --optimize-autoloader', (err, stdout, stderr) => {
         console.log(stdout);
         console.error(stderr);
