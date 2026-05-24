@@ -15,7 +15,6 @@ const { exec } = require('node:child_process');
 const
     packageJson     = require('./package.json'),
     gulp            = require('gulp'),
-    composer        = require('gulp-composer'),
     fs              = require('fs'),
     path            = require('path'),
     rename          = require('gulp-rename'),
