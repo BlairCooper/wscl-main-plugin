@@ -12,7 +12,7 @@ jobs:
     steps:
       # Checkout our code 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # Setup NodeJS environment
       - name: Setup Node.js environment
