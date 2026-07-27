@@ -94,7 +94,13 @@ let zipContents = [
     'resources/**',
     'scripts/**',
     'src/**',
-    'vendor/**'
+    'vendor/**',
+    '!vendor/bin/**',
+    '!vendor/**/test/**',
+    '!vendor/**/tests/**',
+    '!vendor/**/doc/**',
+    '!vendor/**/docs/**',
+    '!vendor/**/docs-md/**'
 ];
 
 function zipReleaseTask() {
