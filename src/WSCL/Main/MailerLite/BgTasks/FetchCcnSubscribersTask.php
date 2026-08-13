@@ -174,13 +174,17 @@ class FetchCcnSubscribersTask implements BgTaskInterface
 
             if (!is_null($rptType)) {
                 // Start the report run
-                /** @var ReportStartResponse */
+                /** @var ?ReportStartResponse */
                 $startResp = $ccnClient->startReport($rptType->updateLink);
 
-                $this->reportStartTime = microtime(true);
-                $this->transientReportValue = $startResp->taskUuid;
+                if (!is_null($startResp)) {
+                    $this->reportStartTime = microtime(true);
+                    $this->transientReportValue = $startResp->taskUuid;
 
-                $this->state = FetchSubsStates::WAIT_FOR_REPORT;
+                    $this->state = FetchSubsStates::WAIT_FOR_REPORT;
+                } else {
+                    $this->state = FetchSubsStates::SUBTASK_FAILED;
+                }
             } else {
                 $this->state = FetchSubsStates::SUBTASK_FAILED;
             }

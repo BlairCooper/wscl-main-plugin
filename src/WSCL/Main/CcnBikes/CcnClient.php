@@ -362,6 +362,14 @@ class CcnClient
         return $result;
     }
 
+    /**
+     * Start running a report
+     *
+     * @param string $updateLink The URL for the report
+     *
+     * @return ReportStartResponse|NULL An object containing the task UUID or
+     *      null if the request did not return HTTP OK
+     */
     public function startReport(string $updateLink): ?ReportStartResponse
     {
         $result = null;
