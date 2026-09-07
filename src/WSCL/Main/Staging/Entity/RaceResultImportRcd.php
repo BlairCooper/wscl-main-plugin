@@ -381,6 +381,16 @@ class RaceResultImportRcd extends TimingImportRcd
 
     /**
      *
+     * {@inheritDoc}
+     * @see \WSCL\Main\Staging\Entity\PersonInfoIntf::getPrevId()
+     */
+    public function getPrevId(): int
+    {
+        return $this->prevRegSysId;
+    }
+
+    /**
+     *
      * @param \DateTime $dateOfBirth
      */
     public function setDateOfBirth(\DateTime $dateOfBirth): void

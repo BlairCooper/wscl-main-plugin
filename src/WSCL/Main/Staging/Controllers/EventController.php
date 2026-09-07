@@ -188,7 +188,7 @@ class EventController extends StagingRestController
                 $post->post_content = json_encode($event);
                 $post->post_title = $event->getName();
 
-                if ($eventId === wp_update_post($post->to_array())) {
+                if ($eventId === wp_update_post($post->to_array())) {   /** @phpstan-ignore argument.type */
                     $result = $event;
                 } else {
                     $result = new \WP_Error(self::INTERNAL_ERROR, 'Unable to update event', array ('status' => 400));

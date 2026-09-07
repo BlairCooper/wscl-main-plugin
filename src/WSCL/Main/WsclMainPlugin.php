@@ -51,7 +51,7 @@ class WsclMainPlugin
             function () use ($entryPointFile) {
                 $this->initializeContainer($entryPointFile);
 
-                wp_register_script('wscl_js_urls', '');
+                wp_register_script('wscl_js_urls', false);
                 wp_enqueue_script('wscl_js_urls');
                 wp_add_inline_script(
                     'wscl_js_urls',

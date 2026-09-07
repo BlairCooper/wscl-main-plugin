@@ -184,7 +184,7 @@ class StagingController extends StagingRestController
 
     /**
      *
-     * @param array<string, array<string, string>> $files
+     * @param array<string, array<string, int<0, max>|string>> $files
      */
     private function validateFilesParam(array $files): void
     {

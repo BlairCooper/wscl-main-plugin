@@ -43,10 +43,10 @@ class UsacClient
 
         $cacheKey = $this->getCacheKey(__FUNCTION__, strval($license));
 
-        /** @var SearchResult */
+        /** @var ?SearchResult */
         $result = $this->cache->get($cacheKey);
 
-        if (!isset($result)) {
+        if (is_null($result)) {
             $resp = $this->client->get(
                 'pub/athletes/results_search',
                 [
