@@ -61,6 +61,18 @@ class Event extends JsonEntity
         return $this->date >= $eraStart;
     }
 
+    /**
+     * Is the event in the era of 7th and 8th Grade Boys Even/Odd?
+     *
+     * @return bool True if the event used Even/Odd, otherwise false.
+     */
+    public function isEvenOdd78Era(): bool
+    {
+        $eraStart = new \DateTime('2026-09-01');
+
+        return $this->date >= $eraStart;
+    }
+
     public function isFallRace(): bool
     {
         return !$this->isSpringRace();

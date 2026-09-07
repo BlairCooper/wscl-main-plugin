@@ -10,6 +10,7 @@ class SeasonPoints extends JsonEntity
     public int $id;
     public int $bib;
     public int $regSysId;
+    public int $prevRegSysId;
     public int $seasonPoints;
     public string $firstname;
     public string $lastname;
@@ -33,6 +34,7 @@ class SeasonPoints extends JsonEntity
             new FieldPropertyEntry('ID', 'id'),
             new FieldPropertyEntry('Bib', 'bib'),
             new FieldPropertyEntry('RegSysID', 'regSysId'),
+            new FieldPropertyEntry('PrevRegSysId', 'prevRegSysId'),
             new FieldPropertyEntry('IndividualPointsSeason', 'seasonPoints'),
             new FieldPropertyEntry('Firstname', 'firstname'),
             new FieldPropertyEntry('Lastname', 'lastname'),

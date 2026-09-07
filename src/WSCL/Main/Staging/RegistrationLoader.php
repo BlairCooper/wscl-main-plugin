@@ -15,6 +15,7 @@ use WSCL\Main\CcnBikes\BgTasks\UpdateIdentityAttributesTask;
 use WSCL\Main\Staging\Entity\CcnRiderImportRcd;
 use WSCL\Main\Staging\Entity\RegistrationImportRcd;
 use WSCL\Main\Staging\Types\RegisteredRiderMap;
+use WSCL\Main\Usac\UsacClient;
 
 class RegistrationLoader
 {
@@ -42,6 +43,16 @@ class RegistrationLoader
     public function loadRegistrationFile(string $regFile): void
     {
         if (!empty($regFile)) {
+            // $factoryRegistry = new \JsonMapper\Handler\FactoryRegistry();
+            // $mapper = \JsonMapper\JsonMapperBuilder::new()
+            // ->withDocBlockAnnotationsMiddleware()
+            // ->withTypedPropertiesMiddleware()
+            // ->withNamespaceResolverMiddleware()
+            // ->withObjectConstructorMiddleware($factoryRegistry)
+            // ->withMiddleware(CcnRiderImportRcd::getValueTransformer())
+            // ->withMiddleware($this->getCallback())
+            // ->build()
+            // ;
             $mapper = (new \JsonMapper\JsonMapperFactory())->bestFit();
 
             $mapper->push(CcnRiderImportRcd::getValueTransformer());
@@ -62,7 +73,7 @@ class RegistrationLoader
             $records = $resultSet->getRecords($header);
 
             foreach ($records as $rcd) {
-                $json = json_encode($rcd);
+                $json = \json_encode($rcd);
 
                 $mapper->mapObjectFromString($json, new CcnRiderImportRcd());
             }

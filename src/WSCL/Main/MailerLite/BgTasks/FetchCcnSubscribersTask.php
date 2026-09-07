@@ -387,7 +387,7 @@ class FetchCcnSubscribersTask implements BgTaskInterface
         /** @var JsonMapperInterface The JsonMapper to use in mapping JSON to objects */
         $mapper = (new JsonMapperFactory($builder))->bestFit();
 
-        $reader = Reader::createFromPath($filename);
+        $reader = Reader::from($filename);
         $reader->skipInputBOM();
         $reader->setHeaderOffset(0);
 

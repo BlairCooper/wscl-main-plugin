@@ -60,6 +60,7 @@ use WSCL\Main\Staging\Controllers\RaceController;
 use WSCL\Main\Staging\Controllers\RaceResultController;
 use WSCL\Main\Staging\Controllers\StagingController;
 use WSCL\Main\CcnBikes\BgTasks\CcnBikesBgProcess;
+use WSCL\Main\CcnBikes\UsacClient;
 
 class ServiceConfig
 {
@@ -166,6 +167,7 @@ class ServiceConfig
             CcnClient::class => \DI\autowire(),
             MailerLiteClient::class => \DI\autowire(),
             RaceResultClient::class => \DI\autowire(),
+            UsacClient::class => \DI\autowire(),
 
             MailerLiteCronJob::class => \DI\autowire()
                 ->constructor(bgProcess: \DI\get(MailerLiteBgProcess::class)),

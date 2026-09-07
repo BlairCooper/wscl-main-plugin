@@ -20,6 +20,11 @@ class SeasonPointsWrapper extends SeasonPoints implements PersonInfoIntf
         return $this->regSysId;
     }
 
+    public function getPrevId(): ?int
+    {
+        return $this->prevRegSysId;
+    }
+
     public function getFirstName(): string
     {
         return $this->firstname;

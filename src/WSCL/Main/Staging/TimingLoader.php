@@ -86,7 +86,12 @@ class TimingLoader
 
     private function checkForNewRegRcd(TimingRcd $timingRcd, SeasonPointsWrapper $seasonPoints): void
     {
-        if ($timingRcd->getRegSysId() !== $seasonPoints->getId()) {
+        if ($timingRcd->getRegSysId() !== $seasonPoints->getId() &&
+            $timingRcd->getRegSysId() !== $seasonPoints->getPrevId()
+            )
+        {
+            $timingRcd->setPrevRegSysId($seasonPoints->getId());
+
             $this->logger->info(
                 'New registration record for {fname} {lname}. New ID: {newId}  Old ID: {oldId}',
                 [

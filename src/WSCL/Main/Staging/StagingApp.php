@@ -60,6 +60,7 @@ class StagingApp
     private const DIVISION_LIST_PDF = "DivisionsList.pdf";
 
     private const TIMING_SYSTEM_IMPORT_CSV = "TimingSystemImport.csv";
+    private const SWEEP_TIMING_SYSTEM_IMPORT_CSV = "SweeoTimingSystemImport.csv";
     private const RACE_PLATE_DATA_CSV = "RacePlatesDatabase.csv";
     private const TEAM_ENVELOPE_DATA_CSV = "TeamEnvelopesDatabase.csv";
 
@@ -129,8 +130,11 @@ class StagingApp
 
             if ($event->seasonFirstEvent) {
                 $extraPlateSet = new RiderByPlateSet();
-                $this->addSweepPlates($extraPlateSet, $event->categories);
-                $this->addRoverPlates($extraPlateSet);
+                /** @var array<RaceResultExportRcd> */
+                $rrExportRcds = [];
+
+                $this->addSweepPlates($extraPlateSet, $rrExportRcds, $event->categories, $event->isSpringRace());
+                $this->addRoverPlates($extraPlateSet, $event->isSpringRace());
                 $this->addReplacementPlates($extraPlateSet);
 
                 $this->generateRacePlateDataCsv(
@@ -139,16 +143,23 @@ class StagingApp
                     $outputDir . self::RACE_PLATE_DATA_CSV
                     );
 
+                $this->generateSweepTimingSystemImportCsv(
+                    $rrExportRcds,
+                    $outputDir . self::SWEEP_TIMING_SYSTEM_IMPORT_CSV
+                    );
+
                 $this->generateTeamEnvelopeDataCsv(
                     $riderByName,
                     $outputDir . self::TEAM_ENVELOPE_DATA_CSV
                     );
 
-                $this->generateDivisionListPdf(
-                    $teamSizeMap,
-                    $tmpDir,
-                    $outputDir . self::DIVISION_LIST_PDF
-                    );
+                if (1 != $event->getDivisionCnt()) {
+                    $this->generateDivisionListPdf(
+                        $teamSizeMap,
+                        $tmpDir,
+                        $outputDir . self::DIVISION_LIST_PDF
+                        );
+                }
             }
 
             if (!$categoryMap->isEmpty()) {
@@ -214,8 +225,8 @@ class StagingApp
     public function getStagingLinks(Event $event): array
     {
         $result = [];
-        $wpUploadDir = wp_upload_dir()['basedir'];
-        $wpUploadUrl = wp_upload_dir()['baseurl'];
+        $wpUploadDir = \wp_upload_dir()['basedir'];
+        $wpUploadUrl = \wp_upload_dir()['baseurl'];
         $outputDir = $this->getOutputDir($event);
 
         $outputFiles = [
@@ -225,6 +236,7 @@ class StagingApp
             self::TEAM_STAGING_PDF,
             self::STAGING_SUMMARY_PDF,
             self::TIMING_SYSTEM_IMPORT_CSV,
+            self::SWEEP_TIMING_SYSTEM_IMPORT_CSV,
             self::STAGING_ORDER_BY_NAME_PDF,
             self::STAGING_ORDER_BY_CATEGORY_PDF,
             self::STAGING_ORDER_BY_BIB_PDF,
@@ -258,6 +270,10 @@ class StagingApp
 
                     case self::TIMING_SYSTEM_IMPORT_CSV:
                         $linkTitle = 'Timing System Import CSV';
+                        break;
+
+                    case self::SWEEP_TIMING_SYSTEM_IMPORT_CSV:
+                        $linkTitle = 'Sweeps Timing System Import CSV';
                         break;
 
                     case self::STAGING_ORDER_BY_NAME_PDF:
@@ -350,7 +366,7 @@ class StagingApp
 
     private function generateRacePlateDataCsv(RiderBySet $riderSet, RiderByPlateSet $extrasSet, string $csvFile): void
     {
-        $writer = Writer::createFromPath($csvFile, "w");
+        $writer = Writer::from($csvFile, "w");
 
         $headerNames = RacePlateRcd::getColumnNames();
 
@@ -377,7 +393,7 @@ class StagingApp
 
     private function generateTeamEnvelopeDataCsv(RiderBySet $riderSet, string $csvFile): void
     {
-        $writer = Writer::createFromPath($csvFile, "w");
+        $writer = Writer::from($csvFile, "w");
 
         $headerNames = TeamEnvelopeRcd::getColumnNames();
 
@@ -484,6 +500,7 @@ class StagingApp
 
             $writer->endDocument();
         }
+
         $this->generatePDF($xmlFile, self::STAGING_SHEETS_XSLT, $pdfFile);
     }
 
@@ -531,6 +548,7 @@ class StagingApp
 
             $writer->endDocument();
         }
+
         $this->generatePDF($xmlFile, self::TEAM_STAGING_XSLT, $pdfFile);
     }
 
@@ -715,7 +733,7 @@ class StagingApp
      */
     private function generateTimingSystemImportCsv(RiderBySet $riderSet, string $csvFile): void
     {
-        $writer = Writer::createFromPath($csvFile, "w");
+        $writer = Writer::from($csvFile, "w");
 
         $headerNames = RaceResultExportRcd::getColumnNames();
 
@@ -726,6 +744,25 @@ class StagingApp
             $rrRider = (new RaceResultExportRcd())->fromRider($rider);
 
             $values = RaceResultExportRcd::getColumnValues($rrRider);
+            $writer->insertOne($values);
+        }
+    }
+
+    /**
+     *
+     * @param RaceResultExportRcd[] $rrSweepRcds
+     * @param string $csvFile
+     */
+    private function generateSweepTimingSystemImportCsv(array $rrSweepRcds, string $csvFile): void
+    {
+        $writer = Writer::from($csvFile, "w");
+
+        $headerNames = RaceResultExportRcd::getColumnNames();
+
+        $writer->insertOne($headerNames);
+
+        foreach ($rrSweepRcds as $rcd) {
+            $values = RaceResultExportRcd::getColumnValues($rcd);
             $writer->insertOne($values);
         }
     }
@@ -945,41 +982,50 @@ class StagingApp
         return str_replace($wpUploadDir, $wpUploadUrl, $filename);
     }
 
-    const SWEEP_ROVER_CATEGORY = 'Sweep/Rover';
-    const SWEEP_PLATES_PER_CATEGORY = 3;
-
     /**
      *
+     * @param RaceResultExportRcd[] $rrSweepRcds
      * @param Category[] $categories
      */
-    private function addSweepPlates(RiderByPlateSet $plateSet, array $categories): void
+    private function addSweepPlates(RiderByPlateSet $plateSet, array &$rrSweepRcds, array $categories, bool $isSpringRace): void
     {
         $sweepBib = 5001;
+        $sweepsPerCategory = $isSpringRace ? 3 : 2;
+        
         foreach ($categories as $category) {
             // Skip plates if the sweep doesn't have an abbreviation. Like a Varsity category
             if (isset($category->plateAbbreviation) && 0 < strlen(trim($category->plateAbbreviation))) {
-                for ($ndx = 0; $ndx < self::SWEEP_PLATES_PER_CATEGORY; $ndx++) {
+                for ($ndx = 0; $ndx < $sweepsPerCategory; $ndx++) {
                     $plate = new RacePlateRcd();
                     $plate->bib = $sweepBib;
                     $plate->plateName = sprintf('%s Sweep', $category->plateAbbreviation);
                     $plate->fullName = sprintf('%s Sweep', $category->name);
-                    $plate->raceCategory = self::SWEEP_ROVER_CATEGORY;
+                    $plate->raceCategory = $category->name . ' Sweep';
 
                     $plateSet->add($plate);
+
+                    $rrExportRcd = new RaceResultExportRcd();
+                    $rrExportRcd->bibNumber = $plate->bib;
+                    $rrExportRcd->category = $plate->raceCategory;
+                    $rrExportRcd->firstname = $category->name;
+                    $rrExportRcd->lastname = 'Sweep';
+
+                    $rrSweepRcds[] = $rrExportRcd;
+
                     $sweepBib++;
                 }
             }
         }
     }
 
-    private function addRoverPlates(RiderByPlateSet $plateSet): void
+    private function addRoverPlates(RiderByPlateSet $plateSet, bool $isSpringRace): void
     {
-        foreach (range(9001, 9010) as $bib) {
+        foreach (range(9001, $isSpringRace ? 9010 : 9004) as $bib) {
             $plate = new RacePlateRcd();
             $plate->bib = $bib;
             $plate->plateName = 'ROVER';
             $plate->fullName = 'Rover Sweep';
-            $plate->raceCategory = self::SWEEP_ROVER_CATEGORY;
+            $plate->raceCategory = 'Rover';
 
             $plateSet->add($plate);
         }

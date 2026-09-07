@@ -415,4 +415,26 @@ class Event // NOSONAR - ignore too many methods
             $race->removeCategories($catIds);
         }
     }
+
+    /**
+     * Check if this is a Spring race
+     * 
+     * @return bool True if it is a Spring race, otherwise false.
+     */
+    public function isSpringRace(): bool
+    {
+        $midYear = new \DateTime($this->date->format('Y') . '-07-01');
+
+        return $midYear > $this->date;
+    }
+
+    /**
+     * Check if this is a Fall race
+     * 
+     * @return bool True if it is a Fall race, otherwise false.
+     */
+    public function isFallRace(): bool
+    {
+        return !$this->isSpringRace();
+    }
 }

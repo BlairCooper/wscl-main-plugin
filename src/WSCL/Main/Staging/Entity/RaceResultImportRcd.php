@@ -23,6 +23,9 @@ class RaceResultImportRcd extends TimingImportRcd
     #[CsvBindByName(column: 'RegSysID')]
     public ?int $regSysId;
 
+    #[CsvBindByName(column: 'PrevRegSysID')]
+    public ?int $prevRegSysId;
+
     #[CsvBindByName(column: 'Bib')]
     public ?int $bibNumber;
 
@@ -56,9 +59,10 @@ class RaceResultImportRcd extends TimingImportRcd
     protected float $lastStagingScore;
     protected float $previousStagingScore;
 
-    public function __construct(int $regSysId = null)
+    public function __construct(?int $regSysId = null)
     {
         $this->regSysId = $regSysId;
+//        $this->prevRegSysId = undef;
         $this->seasonPoints = 0;
         $this->lastSeasonPoints = 0;
         $this->previousSeasonPoints = 0;
@@ -108,6 +112,26 @@ class RaceResultImportRcd extends TimingImportRcd
     public function setRegSysId(int $regSysId): void
     {
         $this->regSysId = $regSysId;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \WSCL\Main\Staging\Entity\TimingRcd::getPrevRegSysId()
+     */
+    public function getPrevRegSysId(): ?int
+    {
+        return $this->prevRegSysId ?? null;
+    }
+
+    /**
+     *
+     * {@inheritDoc}
+     * @see \WSCL\Main\Staging\Entity\TimingRcd::setPrevRegSysId()
+     */
+    public function setPrevRegSysId(int $regSysId): void
+    {
+        $this->prevRegSysId = $regSysId;
     }
 
     /**

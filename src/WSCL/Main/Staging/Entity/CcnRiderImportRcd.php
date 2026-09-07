@@ -22,6 +22,7 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
     const RACE_CATEGORY_PREVIOUS = self::RACE_CATEGORY.'Previous Season';
     const RACE_PLATE_NAME_MAX_LEN = 12;
 
+    private const HS_FROSH_PREFIX = 'High School Frosh';
     private const HS1_PREFIX = 'High School 1';
     private const HS2_PREFIX = 'High School 2';
     private const HS1_BEGINNER_PREFIX = self::HS1_PREFIX . ' (Beg)';        // Transition prefix for HS1/Beg
@@ -375,6 +376,12 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
 
             if (!strstr($category, 'Open')) {
                 $category .= (0 == strcasecmp('F', $this->raceGender) ? " Girls" : " Boys");
+
+                if ((str_starts_with($category, '7') || str_starts_with($category, '8')) &&
+                    0 == strcasecmp('M', $this->raceGender))
+                {
+                    $category .= $this->isOdd() ? ' Odd' : ' Even';
+                }
             }
 
             $this->raceCatCurrSeason = $category;
@@ -507,13 +514,17 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
                 break;
 
             case 9:
-            case 10:
-                $category = self::HS1_PREFIX;
+                if (0 == strcasecmp('M', $this->raceGender)) {
+                    $category = self::HS_FROSH_PREFIX;
+                } else {
+                    $category = self::HS1_PREFIX;
+                }
                 break;
 
+            case 10:
             case 11:
             case 12:
-                $category = self::HS2_PREFIX;
+                $category = self::HS1_PREFIX;
                 break;
 
             default:
@@ -563,9 +574,13 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
         if (strstr($seasonToCheck, "Adv")) {
             $category = self::HS2_PREFIX;
         } else {
-            // If were in 8th Grade, put in High School 1 / Beginner
+            // If were in 8th Grade, put in High School Frosh
             if (strstr($seasonToCheck, "Grade")) {
-                $category = self::HS1_PREFIX;
+                if (0 == strcasecmp('M', $this->raceGender)) {
+                    $category = self::HS_FROSH_PREFIX;
+                } else {
+                    $category = self::HS1_PREFIX;
+                }
             } else {
                 // Otherwise use same category
                 $category = $this->extractCategory($seasonToCheck);
@@ -593,6 +608,12 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
         }
 
         return $category;
+    }
+
+    private function isOdd(): bool
+    {
+        return ($this->getRegSysId() %2) == 1;
+//        return ($this->dateOfBirth->format('j') % 2) == 1;
     }
 
     public function getCategory(): string
@@ -804,7 +825,13 @@ class CcnRiderImportRcd             // NOSONAR - ignore too many methods
     {
         return $this->ibuprofenYN ?? false;
     }
+
     public function getId(): ?int
+    {
+        return $this->ccnIdentityId;
+    }
+
+    public function getPrevId(): ?int
     {
         return $this->ccnIdentityId;
     }

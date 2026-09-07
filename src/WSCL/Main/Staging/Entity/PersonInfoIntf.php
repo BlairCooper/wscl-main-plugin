@@ -8,6 +8,7 @@ namespace WSCL\Main\Staging\Entity;
 interface PersonInfoIntf
 {
     public function getId(): ?int;
+
     /**
      * Fetch the first name.
      *

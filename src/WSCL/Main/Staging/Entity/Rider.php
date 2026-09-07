@@ -75,6 +75,11 @@ class Rider     // NOSONAR - ignore too many methods
         return $this->regRcd->getRegSysId();
     }
 
+    public function getPrevRegSysId(): ?int
+    {
+        return $this->timingRcd->getPrevRegSysId();
+    }
+
     public function getTimingSysId(): int
     {
         return $this->timingRcd->getTimingSysId();

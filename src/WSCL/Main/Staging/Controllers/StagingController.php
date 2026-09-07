@@ -5,6 +5,7 @@ namespace WSCL\Main\Staging\Controllers;
 use RCS\Logging\InMemoryLogger;
 use WSCL\Main\Staging\StagingApp;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use RCS\WP\PluginInfoInterface;
 use WSCL\Main\WsclMainOptionsInterface;
 use RCS\WP\BgProcess\BgProcessInterface;
@@ -74,12 +75,22 @@ class StagingController extends StagingRestController
                 $files[self::PARAM_REGISTRATION_FILE]['tmp_name']
                 );
 
-            $logMsgs = $logger->getLogMsgs();
+            $hasErrors =
+                $logger->hasRecords(LogLevel::ALERT) ||
+                $logger->hasRecords(LogLevel::CRITICAL) ||
+                $logger->hasRecords(LogLevel::EMERGENCY) ||
+                $logger->hasRecords(LogLevel::ERROR) ||
+                $logger->hasRecords(LogLevel::WARNING)
+                ;
 
-            if (empty($logMsgs)) {
-                $result = new \WP_REST_Response($outputFiles);
-            } else {
+            if ($hasErrors) {
                 throw new \DomainException('Errors processing staging.', 400);
+            } else {
+                $result = new \WP_REST_Response([
+                    'links' => $outputFiles,
+                    'status' => 200,
+                    'logMsgs' => $logger->getLogMsgs()
+                    ]);
             }
 
             // Dispatch any background tasks that were added
@@ -99,7 +110,7 @@ class StagingController extends StagingRestController
                 );
         }
 
-        return rest_ensure_response($result);
+        return \rest_ensure_response($result);
     }
 
     /**
@@ -116,7 +127,7 @@ class StagingController extends StagingRestController
         $logger = new InMemoryLogger();
 
         try {
-            $eventId = $request['eventId'];
+            $eventId = $request->get_param('eventId');
 
             $this->validateEventParam($eventId);
 
@@ -151,7 +162,7 @@ class StagingController extends StagingRestController
                 );
         }
 
-        return rest_ensure_response($result);
+        return \rest_ensure_response($result);
     }
 
     private function validateEventParam(string|int|null $eventId): void

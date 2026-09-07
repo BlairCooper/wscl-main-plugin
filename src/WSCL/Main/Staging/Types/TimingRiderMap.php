@@ -34,6 +34,9 @@ class TimingRiderMap
 
         if (isset($id)) {
             $rcd = $this->riderMap[$id] ?? null;
+        } else {
+            $id = $info->getPrevId();
+            $rcd = $this->riderMap[$id] ?? null;
         }
 
         if (!isset($rcd)) {

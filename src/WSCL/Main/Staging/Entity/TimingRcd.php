@@ -26,11 +26,25 @@ interface TimingRcd extends PersonInfoIntf
     public function getRegSysId(): ?int;
 
     /**
+     * Fetch the previous identifier for the registration system if there is one.
+     *
+     * @return int The registration identifier.
+     */
+    public function getPrevRegSysId(): ?int;
+
+    /**
      * Set the identifier for the registration system.
      *
      * @param int $regSysId The registration identifier.
      */
     public function setRegSysId(int $regSysId): void;
+
+    /**
+     * Set the previous identifier for the registration system.
+     *
+     * @param int $regSysId The registration identifier.
+     */
+    public function setPrevRegSysId(int $regSysId): void;
 
     /**
      * Fetch the Bib/Plate number for the rider
