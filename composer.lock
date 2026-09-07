@@ -2464,17 +2464,17 @@
         },
         {
             "name": "raincity/rcs-wp-library",
-            "version": "1.0.27",
+            "version": "1.0.28",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RainCitySolutions/rcs-wp-library",
-                "reference": "0bda64a1c7536531d54c26a18366f51472a5c739"
+                "reference": "39c92da6de21fc2224bc1bc9d1faee1a0d35de2d"
             },
             "require": {
                 "composer/installers": "~2.3",
                 "deliciousbrains/wp-background-processing": "~1.4",
                 "geocoder-php/google-maps-provider": "~4.8",
-                "guzzlehttp/guzzle": "~7.10",
+                "guzzlehttp/guzzle": "~7.10 || ~8.0",
                 "json-mapper/json-mapper": "~2.25",
                 "monolog/monolog": "~3.10",
                 "php": ">=8.2",
@@ -2513,7 +2513,7 @@
                 "BSD-3-Clause"
             ],
             "description": "Library to support implementing WordPress plugins",
-            "time": "2026-08-21T23:53:41+00:00"
+            "time": "2026-09-06T00:05:11+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -3881,11 +3881,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.2.12",
+            "version": "2.2.13",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/174b0d88710f00a42598886504dd7a146f91ace5",
-                "reference": "174b0d88710f00a42598886504dd7a146f91ace5",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9ba9ac76ee9c5cf5b56d58eb5deec6315b7a0260",
+                "reference": "9ba9ac76ee9c5cf5b56d58eb5deec6315b7a0260",
                 "shasum": ""
             },
             "require": {
@@ -3941,7 +3941,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-31T19:09:43+00:00"
+            "time": "2026-09-03T20:38:19+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
