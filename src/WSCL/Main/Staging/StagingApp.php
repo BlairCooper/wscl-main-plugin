@@ -60,7 +60,7 @@ class StagingApp
     private const DIVISION_LIST_PDF = "DivisionsList.pdf";
 
     private const TIMING_SYSTEM_IMPORT_CSV = "TimingSystemImport.csv";
-    private const SWEEP_TIMING_SYSTEM_IMPORT_CSV = "SweeoTimingSystemImport.csv";
+    private const SWEEP_TIMING_SYSTEM_IMPORT_CSV = "SweepTimingSystemImport.csv";
     private const RACE_PLATE_DATA_CSV = "RacePlatesDatabase.csv";
     private const TEAM_ENVELOPE_DATA_CSV = "TeamEnvelopesDatabase.csv";
 
@@ -128,40 +128,6 @@ class StagingApp
                 $teamSizeMap
                 );
 
-            if ($event->seasonFirstEvent) {
-                $extraPlateSet = new RiderByPlateSet();
-                /** @var array<RaceResultExportRcd> */
-                $rrExportRcds = [];
-
-                $this->addSweepPlates($extraPlateSet, $rrExportRcds, $event->categories, $event->isSpringRace());
-                $this->addRoverPlates($extraPlateSet, $event->isSpringRace());
-                $this->addReplacementPlates($extraPlateSet);
-
-                $this->generateRacePlateDataCsv(
-                    $riderByName,
-                    $extraPlateSet,
-                    $outputDir . self::RACE_PLATE_DATA_CSV
-                    );
-
-                $this->generateSweepTimingSystemImportCsv(
-                    $rrExportRcds,
-                    $outputDir . self::SWEEP_TIMING_SYSTEM_IMPORT_CSV
-                    );
-
-                $this->generateTeamEnvelopeDataCsv(
-                    $riderByName,
-                    $outputDir . self::TEAM_ENVELOPE_DATA_CSV
-                    );
-
-                if (1 != $event->getDivisionCnt()) {
-                    $this->generateDivisionListPdf(
-                        $teamSizeMap,
-                        $tmpDir,
-                        $outputDir . self::DIVISION_LIST_PDF
-                        );
-                }
-            }
-
             if (!$categoryMap->isEmpty()) {
                 $this->initializeRows($event, $categoryMap);
 
@@ -213,6 +179,41 @@ class StagingApp
                     "Bib"
                     );
             }
+
+            if ($event->seasonFirstEvent) {
+                $extraPlateSet = new RiderByPlateSet();
+                /** @var array<RaceResultExportRcd> */
+                $rrExportRcds = [];
+
+                $this->addSweepPlates($extraPlateSet, $rrExportRcds, $event->categories, $event->isSpringRace());
+                $this->addRoverPlates($extraPlateSet, $event->isSpringRace());
+                $this->addReplacementPlates($extraPlateSet);
+
+                $this->generateRacePlateDataCsv(
+                    $riderByName,
+                    $extraPlateSet,
+                    $outputDir . self::RACE_PLATE_DATA_CSV
+                    );
+
+                $this->generateSweepTimingSystemImportCsv(
+                    $rrExportRcds,
+                    $outputDir . self::SWEEP_TIMING_SYSTEM_IMPORT_CSV
+                    );
+
+                $this->generateTeamEnvelopeDataCsv(
+                    $riderByName,
+                    $outputDir . self::TEAM_ENVELOPE_DATA_CSV
+                    );
+
+                if (1 != $event->getDivisionCnt()) {
+                    $this->generateDivisionListPdf(
+                        $teamSizeMap,
+                        $tmpDir,
+                        $outputDir . self::DIVISION_LIST_PDF
+                        );
+                }
+            }
+
         }
 
         return $this->getStagingLinks($event);
@@ -993,8 +994,8 @@ class StagingApp
         $sweepsPerCategory = $isSpringRace ? 3 : 2;
         
         foreach ($categories as $category) {
-            // Skip plates if the sweep doesn't have an abbreviation. Like a Varsity category
-            if (isset($category->plateAbbreviation) && 0 < strlen(trim($category->plateAbbreviation))) {
+            // Skip plates if the category is empty or the sweep doesn't have an abbreviation. Like a Varsity category
+            if (!empty($category->getWaveLists()) && isset($category->plateAbbreviation) && 0 < strlen(trim($category->plateAbbreviation))) {
                 for ($ndx = 0; $ndx < $sweepsPerCategory; $ndx++) {
                     $plate = new RacePlateRcd();
                     $plate->bib = $sweepBib;
@@ -1007,6 +1008,8 @@ class StagingApp
                     $rrExportRcd = new RaceResultExportRcd();
                     $rrExportRcd->bibNumber = $plate->bib;
                     $rrExportRcd->category = $plate->raceCategory;
+                    $rrExportRcd->waveCategory = $plate->raceCategory;
+                    $rrExportRcd->division = 'High School';
                     $rrExportRcd->firstname = $category->name;
                     $rrExportRcd->lastname = 'Sweep';
 
