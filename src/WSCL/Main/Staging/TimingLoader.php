@@ -87,7 +87,7 @@ class TimingLoader
     private function checkForNewRegRcd(TimingRcd $timingRcd, SeasonPointsWrapper $seasonPoints): void
     {
         if ($timingRcd->getRegSysId() !== $seasonPoints->getId() &&
-            $timingRcd->getRegSysId() !== $seasonPoints->getPrevId()
+            $timingRcd->getPrevId() !== $seasonPoints->getId()
             )
         {
             $timingRcd->setPrevRegSysId($seasonPoints->getId());
@@ -123,6 +123,7 @@ class TimingLoader
                     $timingRcd->setRaceCnt($riderPoints->raceCnt);
                     $timingRcd->setDivision($riderPoints->division);
                     $timingRcd->setHasFirstPlaceFinish($riderPoints->hasFirstPlaceFinish);
+                    $timingRcd->setPrevRegSysId($riderPoints->prevRegSysId);
                 }
             };
     }

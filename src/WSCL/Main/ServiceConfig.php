@@ -60,7 +60,7 @@ use WSCL\Main\Staging\Controllers\RaceController;
 use WSCL\Main\Staging\Controllers\RaceResultController;
 use WSCL\Main\Staging\Controllers\StagingController;
 use WSCL\Main\CcnBikes\BgTasks\CcnBikesBgProcess;
-use WSCL\Main\CcnBikes\UsacClient;
+use WSCL\Main\Usac\UsacClient;
 
 class ServiceConfig
 {
