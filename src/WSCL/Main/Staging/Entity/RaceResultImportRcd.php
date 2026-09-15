@@ -62,7 +62,7 @@ class RaceResultImportRcd extends TimingImportRcd
     public function __construct(?int $regSysId = null)
     {
         $this->regSysId = $regSysId;
-//        $this->prevRegSysId = undef;
+        $this->prevRegSysId = null;
         $this->seasonPoints = 0;
         $this->lastSeasonPoints = 0;
         $this->previousSeasonPoints = 0;
@@ -384,7 +384,7 @@ class RaceResultImportRcd extends TimingImportRcd
      * {@inheritDoc}
      * @see \WSCL\Main\Staging\Entity\PersonInfoIntf::getPrevId()
      */
-    public function getPrevId(): int
+    public function getPrevId(): ?int
     {
         return $this->prevRegSysId;
     }

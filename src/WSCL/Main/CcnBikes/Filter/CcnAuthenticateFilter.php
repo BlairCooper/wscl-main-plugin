@@ -58,17 +58,24 @@ class CcnAuthenticateFilter
 
     private function acquireCsrfToken(RequestInterface $orgReq): void
     {
+        $localClient = new Client([
+            'base_uri' => $this->client->getConfig('base_uri'),
+            'headers'  => array_merge(
+                [],
+                $this->client->getConfig('headers') ?? []
+            ),
+            'handler'  => Utils::chooseHandler()
+        ]);
+
         /** @var \Psr\Http\Message\ResponseInterface */
-        $resp = $this->client->post(
+        $resp = $localClient->post(
             'users/login/',
             array (
                 'json' => array(
                     'username' => $this->username,
                     'password' => $this->password,
                     'accepted_cookie_policy' => true
-                ),
-                // We'll use the default handler so we don't rerun our middleware
-                'handler' => Utils::chooseHandler()
+                )
             )
             );
 

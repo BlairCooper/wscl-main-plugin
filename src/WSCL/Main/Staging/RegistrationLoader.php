@@ -2,7 +2,6 @@
 declare(strict_types = 1);
 namespace WSCL\Main\Staging;
 
-use function GuzzleHttp\json_encode;
 use JsonMapper\JsonMapperInterface;
 use JsonMapper\Middleware\FinalCallback;
 use JsonMapper\ValueObjects\PropertyMap;
